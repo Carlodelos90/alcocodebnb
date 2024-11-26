@@ -8,15 +8,17 @@ public class Menu
 
         while (!exit)
         {
-            Console.Clear();
+            var dbConnection = new DatabaseConnection();
+            var dbQueries = new DatabaseQueries(dbConnection);
+            //Console.Clear();
             Console.WriteLine("------- Welcome to AlcoCodeBNB --------");
             Console.WriteLine("\n1. Manage Bookings" +
                               "\n2. Customers" +
-                              "\n3. Accomodations" +
+                              "\n3. Accommodations" +
                               "\n4. Exit");
             Console.Write("Choose an option: ");
 
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             switch (input)
             {
@@ -24,10 +26,10 @@ public class Menu
                     ManageBookings();
                     break;
                 case "2":
-                    //Customer();
+                    dbQueries.GetAllCustomers();
                     break;
                 case "3":
-                    //Accomodatoin();
+                    //Accommodation();
                     break;
                 case "4":
                     exit = true;
@@ -46,7 +48,7 @@ public class Menu
 
         while (!exit)
         {
-            Console.Clear();
+            //Console.Clear();
 
             Console.WriteLine("------- What do you want to do? --------");
             Console.WriteLine("\n1. New Booking" +

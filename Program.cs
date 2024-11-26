@@ -8,13 +8,14 @@ namespace alcocodebnb
         {
             try
             {
-                //Menu menu = new Menu();
-                //menu.Start();
+                Menu menu = new Menu();
+                menu.Start();
                 
                 var dbConnection = new DatabaseConnection();
                 var dbQueries = new DatabaseQueries(dbConnection);
                 dbConnection.TestConnection(); // Test the connection and print the message
-                dbQueries.GetAllCustomers();
+                dbQueries.GetAllBookings();
+                
                 
 
             }

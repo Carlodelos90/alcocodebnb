@@ -1,56 +1,74 @@
-using System; // Provides basic system functionalities like Console output
-using Npgsql; // Allows us to connect to and interact with a PostgreSQL database
+using System;
+using Npgsql;
 
-namespace alcocodebnb // The namespace groups related classes and functionality
+namespace alcocodebnb
 {
-    public class DatabaseQueries // A class to handle database queries
+    public class DatabaseQueries
     {
-        private readonly DatabaseConnection _dbConnection; // Stores the database connection object
+        private readonly DatabaseConnection _dbConnection;
 
-        // Constructor: Accepts a DatabaseConnection instance and initializes the _dbConnection field
         public DatabaseQueries(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection; // Saves the provided connection object for later use
+            _dbConnection = dbConnection;
         }
 
-        // Method: Fetches and displays all customer names from the "customer" table
         public void GetAllCustomers()
         {
-            // SQL query to select only the "firstname" and "lastname" columns from the "customer" table
             string query = "SELECT firstname, lastname FROM customer;";
 
             try
             {
-                // Step 1: Get a database connection from the DatabaseConnection class
                 using var connection = _dbConnection.GetConnection();
-
-                // Step 2: Open the database connection to prepare for the query
                 connection.Open();
 
-                // Step 3: Create a command object to execute the SQL query
                 using var command = new NpgsqlCommand(query, connection);
-
-                // Step 4: Execute the query and get the results in a data reader
                 using var reader = command.ExecuteReader();
 
-                // Step 5: Print the header for the list of customers
                 Console.WriteLine("Customers List:");
-
-                // Step 6: Loop through all rows in the result set
-                while (reader.Read()) // Read() moves to the next row in the result set
+                while (reader.Read())
                 {
-                    // Retrieve the "firstname" and "lastname" values from the current row
-                    string firstName = reader.GetString(0); // GetString(0) fetches the value in the first column
-                    string lastName = reader.GetString(1);  // GetString(1) fetches the value in the second column
+                    string firstName = reader.GetString(0);
+                    string lastName = reader.GetString(1);
 
-                    // Print the full name to the console
                     Console.WriteLine($"- {firstName} {lastName}");
                 }
             }
-            catch (Exception ex) // Catch any errors that occur while working with the database
+            catch (Exception ex)
             {
-                // Print an error message if something goes wrong
                 Console.WriteLine($"Error fetching customers: {ex.Message}");
+            }
+        }
+
+        public void GetAllBookings()
+        {
+            string query = "SELECT id, customerid, accommodationid, startdate, enddate, totalprice, numberofguests, status FROM booking;";
+
+            try
+            {
+                using var connection = _dbConnection.GetConnection();
+                connection.Open();
+
+                using var command = new NpgsqlCommand(query, connection);
+                using var reader = command.ExecuteReader();
+
+                Console.WriteLine("Bookings List:");
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    int customerId = reader.GetInt32(1);
+                    int accommodationId = reader.GetInt32(2);
+                    DateTime startDate = reader.GetDateTime(3);
+                    DateTime endDate = reader.GetDateTime(4);
+                    decimal totalPrice = reader.GetDecimal(5);
+                    int numberOfGuests = reader.GetInt32(6);
+                    string status = reader.GetString(7);
+
+                    Console.WriteLine($"Booking ID: {id}, Customer ID: {customerId}, Accommodation ID: {accommodationId}, Start Date: {startDate:yyyy-MM-dd}, End Date: {endDate:yyyy-MM-dd}, Total Price: {totalPrice:C}, Guests: {numberOfGuests}, Status: {status}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error fetching bookings: {ex.Message}");
             }
         }
     }
