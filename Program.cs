@@ -4,6 +4,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Hello, World Carlo wow test med Hugo!");
+        Menu menu = new Menu();
+        menu.Start();
     }
 }
