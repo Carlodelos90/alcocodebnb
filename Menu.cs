@@ -57,7 +57,7 @@ public class Menu
                               "\n4. Exit");
             Console.Write("Choose an option: ");
 
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             switch (input)
             {
