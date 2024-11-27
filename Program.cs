@@ -15,9 +15,6 @@ namespace alcocodebnb
                 var dbQueries = new DatabaseQueries(dbConnection);
                 dbConnection.TestConnection(); // Test the connection and print the message
                 dbQueries.GetAllBookings();
-                
-                
-
             }
             catch (Exception ex)
             {

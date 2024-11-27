@@ -1,3 +1,5 @@
+using alcocodebnb.BookingQueries;
+
 namespace alcocodebnb;
 
 public class Menu
@@ -9,10 +11,13 @@ public class Menu
     {
         _dbConnection = new DatabaseConnection();
         _dbQueries = new DatabaseQueries(_dbConnection);
+        
+
     }
 
     public void Start()
     {
+        
         while (true)
         {
             Console.Clear();
@@ -49,9 +54,12 @@ public class Menu
 
     private void ManageBookings()
     {
+        //All the connections needed
+        var cancelBooking = new CancelBooking(_dbConnection);
+        
         while (true)
         {
-            Console.Clear();
+            //Console.Clear();
             Console.WriteLine("------- Manage Bookings --------");
             Console.WriteLine("\n1. New Booking" +
                               "\n2. Cancel Booking" +
@@ -64,11 +72,11 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    // Placeholder for New Booking functionality
+                    cancelBooking.ShowBookings();
                     Console.WriteLine("New Booking functionality coming soon...");
                     break;
                 case "2":
-                    // Placeholder for Cancel Booking functionality
+                    // Placeholder for Cancel booking functionality
                     Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
                 case "3":

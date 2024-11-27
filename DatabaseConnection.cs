@@ -12,7 +12,7 @@ namespace alcocodebnb
         {
             // Load connection string securely from configuration
             var builder = new ConfigurationBuilder()
-                 .AddJsonFile("/Users/carlo/repos/alcocodebnb/appsettings.json", optional: true)  // For app settings
+                 .AddJsonFile("appsettings.json", optional: true)  // For app settings
                  .AddEnvironmentVariables(); // For environment variables
             
 
