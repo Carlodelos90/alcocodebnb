@@ -2,21 +2,26 @@ namespace alcocodebnb;
 
 public class Menu
 {
+    private readonly DatabaseConnection _dbConnection;
+    private readonly DatabaseQueries _dbQueries;
+
+    public Menu()
+    {
+        _dbConnection = new DatabaseConnection();
+        _dbQueries = new DatabaseQueries(_dbConnection);
+    }
+
     public void Start()
     {
-        bool exit = false;
-
-        while (!exit)
+        while (true)
         {
-            var dbConnection = new DatabaseConnection();
-            var dbQueries = new DatabaseQueries(dbConnection);
-            //Console.Clear();
+            Console.Clear();
             Console.WriteLine("------- Welcome to AlcoCodeBNB --------");
             Console.WriteLine("\n1. Manage Bookings" +
                               "\n2. Customers" +
                               "\n3. Accommodations" +
                               "\n4. Exit");
-            Console.Write("Choose an option: ");
+            Console.Write("\nChoose an option: ");
 
             string? input = Console.ReadLine();
 
@@ -26,56 +31,126 @@ public class Menu
                     ManageBookings();
                     break;
                 case "2":
-                    dbQueries.GetAllCustomers();
+                    ManageCustomers();
                     break;
                 case "3":
-                    //Accommodation();
+                    ManageAccommodations();
                     break;
                 case "4":
-                    exit = true;
                     Console.WriteLine("Goodbye!");
-                    break;
+                    return;
                 default:
-                    Console.WriteLine("Invalid option. Please try again.");
+                    Console.WriteLine("Invalid option. Press any key to try again.");
+                    Console.ReadKey();
                     break;
             }
         }
     }
 
-    public void ManageBookings()
+    private void ManageBookings()
     {
-        bool exit = false;
-
-        while (!exit)
+        while (true)
         {
-            //Console.Clear();
-
-            Console.WriteLine("------- What do you want to do? --------");
+            Console.Clear();
+            Console.WriteLine("------- Manage Bookings --------");
             Console.WriteLine("\n1. New Booking" +
                               "\n2. Cancel Booking" +
                               "\n3. Change Booking" +
-                              "\n4. Exit");
-            Console.Write("Choose an option: ");
+                              "\n4. Back to Main Menu");
+            Console.Write("\nChoose an option: ");
 
             string? input = Console.ReadLine();
 
             switch (input)
             {
                 case "1":
-                    //NewBooking();
+                    // Placeholder for New Booking functionality
+                    Console.WriteLine("New Booking functionality coming soon...");
                     break;
                 case "2":
-                    //CancelBooking();
+                    // Placeholder for Cancel Booking functionality
+                    Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
                 case "3":
-                    //ChangeBooking();
+                    // Placeholder for Change Booking functionality
+                    Console.WriteLine("Change Booking functionality coming soon...");
                     break;
                 case "4":
-                    exit = true;
-                    Console.WriteLine("Goodbye!");
-                    break;
+                    return;
                 default:
-                    Console.WriteLine("Invalid option. Please try again.");
+                    Console.WriteLine("Invalid option. Press any key to try again.");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+
+    private void ManageCustomers()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("------- Manage Customers --------");
+            Console.WriteLine("\n1. View All Customers" +
+                              "\n2. Add New Customer" +
+                              "\n3. Back to Main Menu");
+            Console.Write("\nChoose an option: ");
+
+            string? input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    _dbQueries.GetAllCustomers();
+                    Console.WriteLine("\nPress any key to return...");
+                    Console.ReadKey();
+                    break;
+                case "2":
+                    Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
+                    // Placeholder for adding customer functionality
+                    Console.WriteLine("Add Customer functionality coming soon...");
+                    Console.ReadKey();
+                    break;
+                case "3":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press any key to try again.");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+
+    private void ManageAccommodations()
+    {
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine("------- Manage Accommodations --------");
+            Console.WriteLine("\n1. View All Accommodations" +
+                              "\n2. Search Accommodations" +
+                              "\n3. Back to Main Menu");
+            Console.Write("\nChoose an option: ");
+
+            string? input = Console.ReadLine();
+
+            switch (input)
+            {
+                case "1":
+                    // Placeholder for View All Accommodations functionality
+                    Console.WriteLine("View All Accommodations functionality coming soon...");
+                    Console.ReadKey();
+                    break;
+                case "2":
+                    // Placeholder for Search Accommodations functionality
+                    Console.WriteLine("Search Accommodations functionality coming soon...");
+                    Console.ReadKey();
+                    break;
+                case "3":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press any key to try again.");
+                    Console.ReadKey();
                     break;
             }
         }
