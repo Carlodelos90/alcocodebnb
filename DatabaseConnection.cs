@@ -6,14 +6,16 @@ namespace alcocodebnb
 {
     public class DatabaseConnection
     {
-        private readonly string _connectionString;
+        private readonly string? _connectionString;
 
         public DatabaseConnection()
         {
             // Load connection string securely from configuration
             var builder = new ConfigurationBuilder()
-                .AddJsonFile("/Users/carlo/repos/alcocodebnb/appsettings.json", optional: true)  // For app settings
-                .AddEnvironmentVariables(); // For environment variables
+                 .AddJsonFile("/Users/carlo/repos/alcocodebnb/appsettings.json", optional: true)  // For app settings
+                 .AddEnvironmentVariables(); // For environment variables
+            
+
 
             IConfiguration configuration = builder.Build();
 
