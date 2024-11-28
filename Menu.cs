@@ -7,6 +7,7 @@ public class Menu
 {
     private readonly DatabaseConnection _dbConnection;
     private readonly DatabaseQueries _dbQueries;
+    
 
     public Menu()
     {
@@ -14,6 +15,7 @@ public class Menu
         DatabaseQueries queries = new(db.Connection());
         CancelBooking cancel = new(db.Connection());
         NewBooking addBooking = new(db.Connection());
+        
 
     }
 
@@ -77,6 +79,10 @@ public class Menu
                     Console.Clear();
                     NewBooking.AllLocations();
                     Console.WriteLine("Enter the id of the location you would like to book: ");
+                    int chosenId = int.Parse(Console.ReadLine());
+                    NewBooking.ShowAccommodations(chosenId);
+                    
+                    
                     /*
                     if (int.TryParse(Console.ReadLine(), out int NewBookingId))
                     {
