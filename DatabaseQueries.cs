@@ -1,17 +1,18 @@
 using System;
 using Npgsql;
 
-namespace alcocodebnb
-{
+namespace alcocodebnb;
+
     public class DatabaseQueries
     {
-        private readonly DatabaseConnection _dbConnection;
+        private NpgsqlDataSource _database;
 
-        public DatabaseQueries(DatabaseConnection dbConnection)
+        public DatabaseQueries(NpgsqlDataSource database)
         {
-            _dbConnection = dbConnection;
+            _database = database;
         }
-
+    }
+/*
         public void GetAllCustomers()
         {
             string query = "SELECT firstname, lastname FROM customer;";
@@ -71,5 +72,4 @@ namespace alcocodebnb
                 Console.WriteLine($"Error fetching bookings: {ex.Message}");
             }
         }
-    }
-}
+*/

@@ -9,9 +9,9 @@ public class Menu
 
     public Menu()
     {
-        _dbConnection = new DatabaseConnection();
-        _dbQueries = new DatabaseQueries(_dbConnection);
-        
+        DatabaseConnection db = new();
+        DatabaseQueries queries = new(db.Connection());
+        CancelBooking cancel = new(db.Connection());
 
     }
 
@@ -55,7 +55,7 @@ public class Menu
     private void ManageBookings()
     {
         //All the connections needed
-        var cancelBooking = new CancelBooking(_dbConnection);
+        //var cancelBooking = new CancelBooking(_database);
         
         while (true)
         {
@@ -72,7 +72,7 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    cancelBooking.ShowBookings();
+                    CancelBooking.AllItems();
                     Console.WriteLine("New Booking functionality coming soon...");
                     break;
                 case "2":
@@ -109,7 +109,7 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    _dbQueries.GetAllCustomers();
+                    //GetAllCustomers();
                     Console.WriteLine("\nPress any key to return...");
                     Console.ReadKey();
                     break;

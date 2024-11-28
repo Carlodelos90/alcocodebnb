@@ -1,4 +1,5 @@
 ﻿using System;
+using Npgsql;
 
 namespace alcocodebnb
 {
@@ -11,10 +12,10 @@ namespace alcocodebnb
                 Menu menu = new Menu();
                 menu.Start();
                 
-                var dbConnection = new DatabaseConnection();
-                var dbQueries = new DatabaseQueries(dbConnection);
-                dbConnection.TestConnection(); // Test the connection and print the message
-                dbQueries.GetAllBookings();
+                //var dbConnection = new DatabaseConnection();
+                //var dbQueries = new DatabaseQueries(dbConnection);
+                //_database.TestConnection(); // Test the connection and print the message
+                //dbQueries.GetAllBookings();
             }
             catch (Exception ex)
             {

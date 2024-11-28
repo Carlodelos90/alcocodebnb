@@ -3,36 +3,31 @@ using Npgsql;
 
 public class CancelBooking
 {
-    private DatabaseConnection _dbConnection;
+    
+    private NpgsqlDataSource _database;
 
-    public CancelBooking(DatabaseConnection dbConnection)
+    public CancelBooking(NpgsqlDataSource database)
     {
-        _dbConnection = dbConnection;
+        _database = database;
     }
-
-    public void ShowBookings()
+    
+    public async void AllItems()
     {
-        string query = "SELECT * from booking;";
-
-        try
-        {
-            using var connection = _dbConnection.GetConnection();
-            connection.Open();
-
-            using var command = new NpgsqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
-
-            Console.WriteLine("Booking List:");
-            while (reader.Read())
+        await using (var cmd = _database.CreateCommand("SELECT * FROM booking")) // Skapa vårt kommand/query
+        await using (var reader = await cmd.ExecuteReaderAsync()) // Kör vår kommando/query och inväntar resultatet.
+            while ( await reader.ReadAsync()) // Läser av 1 rad/objekt i taget ifrån resultatet och kommer avsluta loopen när det inte finns fler rader att läsa. 
             {
-                int id = reader.GetInt32(0);
-                int customerid = reader.GetInt32(1);
-                Console.WriteLine($"- {id} {customerid}");
+                Console.WriteLine($"Id: {reader.GetInt32(0)}");
+                                 
             }
-        }
-        catch (Exception ex)
+    }
+    public async void DeleteItem(int id)
+    {
+        await using (var cmd = _database.CreateCommand("DELETE FROM items WHERE id = $1"))
         {
-            Console.WriteLine($"Error fetching bookings: {ex.Message}");
+            cmd.Parameters.AddWithValue(id);
+            int result = await cmd.ExecuteNonQueryAsync();
+            Console.WriteLine(result);
         }
     }
 }

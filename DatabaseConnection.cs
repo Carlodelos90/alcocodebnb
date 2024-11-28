@@ -2,49 +2,33 @@ using System;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
 
-namespace alcocodebnb
+namespace alcocodebnb;
+public class DatabaseConnection
 {
-    public class DatabaseConnection
+    private readonly string _host = "localhost";
+    private readonly string _port = "5433"; // Default port brukar vara 5432
+    private readonly string _username = "postgres";
+    private readonly string _password = "postgres";
+    private readonly string _database = "postgres_connection";
+    /*
+        Per default så använder man public-schemat, vill man ändra till ett annat schema
+        lägger man till "SearchPath={schema_namn}" i slutet av Create-metodens Sträng.
+
+        private readonly string _schema = "";
+        _connection = NpgsqlDataSource.Create($"Host={_host};Port={_port};Username={_username};Password={_password};Database={_database};SearchPath={_schema}");
+     */
+    
+    private NpgsqlDataSource _connection;
+
+    public NpgsqlDataSource Connection()
     {
-        private readonly string? _connectionString;
+        return _connection;
+    }
 
-        public DatabaseConnection()
-        {
-            // Load connection string securely from configuration
-            var builder = new ConfigurationBuilder()
-                 .AddJsonFile("/Users/hugomanns/Documents/abnb/alcocodebnb/appsettings.json", optional: true)  // For app settings
-                 .AddEnvironmentVariables(); // For environment variables
-            
-
-
-            IConfiguration configuration = builder.Build();
-
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
-
-            if (string.IsNullOrEmpty(_connectionString))
-            {
-                throw new InvalidOperationException("Database connection string is not configured.");
-            }
-        }
-
-        public NpgsqlConnection GetConnection()
-        {
-            return new NpgsqlConnection(_connectionString);
-        }
-
-        public void TestConnection()
-        {
-            try
-            {
-                using var connection = GetConnection();
-                connection.Open(); // Attempt to open the connection
-                Console.WriteLine("Connection successful!"); // Success message
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Failed to connect to the database: {ex.Message}");
-                throw; // Re-throw the exception if necessary
-            }
-        }
+    public DatabaseConnection()
+    {
+        _connection = NpgsqlDataSource.Create($"Host={_host};Port={_port};Username={_username};Password={_password};Database={_database}");
+        
+        using var conn = _connection.OpenConnection(); // Kontrollerar att vi har lyckats kopplat upp oss till databasen.
     }
 }
