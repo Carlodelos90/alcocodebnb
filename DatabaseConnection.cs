@@ -9,7 +9,7 @@ public class DatabaseConnection
     private readonly string _port = "5433"; // Default port brukar vara 5432
     private readonly string _username = "postgres";
     private readonly string _password = "postgres";
-    private readonly string _database = "postgres_connection";
+    private readonly string _database = "postgres";
     /*
         Per default så använder man public-schemat, vill man ändra till ett annat schema
         lägger man till "SearchPath={schema_namn}" i slutet av Create-metodens Sträng.

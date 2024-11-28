@@ -1,4 +1,5 @@
 using alcocodebnb.BookingQueries;
+using Npgsql;
 
 namespace alcocodebnb;
 
@@ -12,6 +13,7 @@ public class Menu
         DatabaseConnection db = new();
         DatabaseQueries queries = new(db.Connection());
         CancelBooking cancel = new(db.Connection());
+        NewBooking addBooking = new(db.Connection());
 
     }
 
@@ -65,17 +67,42 @@ public class Menu
                               "\n2. Cancel Booking" +
                               "\n3. Change Booking" +
                               "\n4. Back to Main Menu");
-            Console.Write("\nChoose an option: ");
+            Console.WriteLine("\nChoose an option: ");
 
             string? input = Console.ReadLine();
 
             switch (input)
             {
                 case "1":
-                    CancelBooking.AllItems();
-                    Console.WriteLine("New Booking functionality coming soon...");
+                    Console.Clear();
+                    NewBooking.AllLocations();
+                    Console.WriteLine("Enter the id of the location you would like to book: ");
+                    /*
+                    if (int.TryParse(Console.ReadLine(), out int NewBookingId))
+                    {
+                        NewBooking.AddNewBooking(NewBookingId);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }*/
+                    
+                    
+                    //Console.WriteLine("New Booking functionality coming soon...");
                     break;
                 case "2":
+                    CancelBooking.AllBookings();
+                    
+                    Console.WriteLine("Write the id of the booking you would like to cancel: ");
+                    if (int.TryParse(Console.ReadLine(), out int CancelId))
+                    {
+                        CancelBooking.DeleteBooking(CancelId);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input. Please enter a valid number.");
+                    }
+
                     // Placeholder for Cancel booking functionality
                     Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
