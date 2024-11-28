@@ -1,10 +1,28 @@
-﻿namespace alcocodebnb;
+﻿using System;
 
-class Program
+namespace alcocodebnb
 {
-    static void Main(string[] args)
+    class Program
     {
-        Menu menu = new Menu();
-        menu.Start();
+        static void Main(string[] args)
+        {
+            try
+            {
+                Menu menu = new Menu();
+                menu.Start();
+                
+                var dbConnection = new DatabaseConnection();
+                var dbQueries = new DatabaseQueries(dbConnection);
+                dbConnection.TestConnection(); // Test the connection and print the message
+                dbQueries.GetAllBookings();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+        }
     }
 }
+
+
+
