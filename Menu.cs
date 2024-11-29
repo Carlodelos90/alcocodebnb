@@ -58,9 +58,6 @@ public class Menu
 
     private void ManageBookings()
     {
-        //All the connections needed
-        //var cancelBooking = new CancelBooking(_database);
-        
         while (true)
         {
             //Console.Clear();
@@ -183,7 +180,7 @@ public class Menu
             Console.Clear();
             Console.WriteLine("------- Manage Customers --------");
             Console.WriteLine("\n1. View All Customers" +
-                              "\n2. Add New Customer" +
+                              "\n2. View customer's details" +
                               "\n3. Back to Main Menu");
             Console.Write("\nChoose an option: ");
 
@@ -192,13 +189,13 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    //GetAllCustomers();
+                    DatabaseQueries.GetAllCustomers();
                     Console.WriteLine("\nPress any key to return...");
                     Console.ReadKey();
                     break;
                 case "2":
                     Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
-                    // Placeholder for adding customer functionality
+                    DatabaseQueries.GetAllCustomersEmail();
                     Console.WriteLine("Add Customer functionality coming soon...");
                     Console.ReadKey();
                     break;
