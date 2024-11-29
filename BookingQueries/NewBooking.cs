@@ -158,6 +158,23 @@ public class NewBooking
                 Console.WriteLine($"Error retrieving booking summary: {ex.Message}");
             }
         }
+        
+        //EDVIN 
+        public static async void FilterPrice()
+        {
+            await using var cmd = _database?.CreateCommand("SELECT * FROM location");
+            await using var reader = await cmd?.ExecuteReaderAsync()!;
+            while ( await reader.ReadAsync()) 
+            {
+                Console.WriteLine($"id: {reader.GetInt32(0)}, " +
+                                  $"name: {reader.GetString(1)}, " +
+                                  $"country: {reader.GetString(2)}, " +
+                                  $"region: {reader.GetString(3)}");
+
+
+            }
+        }
+        
 
         /*public static void AddNewBooking(int customerId, int accommodationId, DateTime startDateTime, DateTime endDateTime, decimal totalPrice, int numberOfGuests)
         {

@@ -58,7 +58,8 @@ public class Menu
             Console.WriteLine("\n1. New Booking" +
                               "\n2. Cancel Booking" +
                               "\n3. Change Booking" +
-                              "\n4. Back to Main Menu");
+                              "\n4. Filter price" +
+                              "\n5. Back to Main Menu");
             Console.WriteLine("\nChoose an option: ");
 
             string? input = Console.ReadLine();
@@ -148,15 +149,16 @@ public class Menu
                         Console.WriteLine("Invalid input. Please enter a valid number.");
                     }
                     break;
-            
-                    // Placeholder for Cancel booking functionality
-                    Console.WriteLine("Cancel Booking functionality coming soon...");
-                    break;
+                
                 case "3":
                     // Placeholder for Change Booking functionality
                     Console.WriteLine("Change Booking functionality coming soon...");
                     break;
                 case "4":
+                   NewBooking.FilterPrice();
+                    break;
+                
+                case "5":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");
