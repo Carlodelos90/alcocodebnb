@@ -1,21 +1,16 @@
 using System.Runtime.InteropServices.JavaScript;
 using alcocodebnb.BookingQueries;
-using Npgsql;
 
 namespace alcocodebnb;
 
 public class Menu
 {
-    private readonly DatabaseConnection _dbConnection;
-    private readonly DatabaseQueries _dbQueries;
-
     public Menu()
     {
         DatabaseConnection db = new();
         DatabaseQueries queries = new(db.Connection());
         CancelBooking cancel = new(db.Connection());
         NewBooking addBooking = new(db.Connection());
-
     }
 
     public void Start()
@@ -57,9 +52,6 @@ public class Menu
 
     private void ManageBookings()
     {
-        //All the connections needed
-        //var cancelBooking = new CancelBooking(_database);
-        
         while (true)
         {
             //Console.Clear();
@@ -75,22 +67,75 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    Console.Clear();
+                    // Collect booking details
                     NewBooking.AllLocations();
-                    Console.WriteLine("Enter the id of the location you would like to book: ");
-                    /*
-                    if (int.TryParse(Console.ReadLine(), out int NewBookingId))
+
+                    Console.Write("\nEnter Location ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int locationId))
                     {
-                        NewBooking.AddNewBooking(NewBookingId);
+                        Console.WriteLine("Invalid Location ID.");
+                        break;
                     }
-                    else
+
+                    NewBooking.ShowAccommodations(locationId);
+
+                    Console.Write("\nEnter Accommodation ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int accommodationId))
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
-                    }*/
-                    
-                    
-                    //Console.WriteLine("New Booking functionality coming soon...");
+                        Console.WriteLine("Invalid Accommodation ID.");
+                        break;
+                    }
+
+                    Console.Write("Enter Customer ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int customerId))
+                    {
+                        Console.WriteLine("Invalid Customer ID.");
+                        break;
+                    }
+
+                    Console.Write("Enter Start Date (yyyy-mm-dd): ");
+                    if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
+                    {
+                        Console.WriteLine("Invalid Start Date.");
+                        break;
+                    }
+
+                    Console.Write("Enter End Date (yyyy-mm-dd): ");
+                    if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+                    {
+                        Console.WriteLine("Invalid End Date.");
+                        break;
+                    }
+
+                    if (endDate <= startDate)
+                    {
+                        Console.WriteLine("End date must be after start date.");
+                        break;
+                    }
+
+                    Console.Write("Enter Number of Guests: ");
+                    if (!int.TryParse(Console.ReadLine(), out int numberOfGuests))
+                    {
+                        Console.WriteLine("Invalid number of guests.");
+                        break;
+                    }
+
+                    Console.Write("Enter Total Price: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal totalPrice))
+                    {
+                        Console.WriteLine("Invalid Total Price.");
+                        break;
+                    }
+
+                    Console.Write("Enter Status: ");
+                    //string status = Console.ReadLine();
+
+                    // Add the new booking
+                    NewBooking.AddNewBooking(customerId, accommodationId, startDate, endDate, totalPrice, numberOfGuests);
+                    Console.WriteLine("\nBOOKING COMPLETED! \nPress any key to exit.");
+                    Console.ReadKey();
                     break;
+
                 case "2":
                     CancelBooking.AllBookings();
                     
@@ -103,7 +148,8 @@ public class Menu
                     {
                         Console.WriteLine("Invalid input. Please enter a valid number.");
                     }
-
+                    break;
+            
                     // Placeholder for Cancel booking functionality
                     Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
@@ -178,7 +224,7 @@ public class Menu
             Console.Clear();
             Console.WriteLine("------- Manage Customers --------");
             Console.WriteLine("\n1. View All Customers" +
-                              "\n2. Add New Customer" +
+                              "\n2. View customer's details" +
                               "\n3. Back to Main Menu");
             Console.Write("\nChoose an option: ");
 
@@ -187,13 +233,13 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    //GetAllCustomers();
+                    DatabaseQueries.GetAllCustomers();
                     Console.WriteLine("\nPress any key to return...");
                     Console.ReadKey();
                     break;
                 case "2":
                     Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
-                    // Placeholder for adding customer functionality
+                    DatabaseQueries.GetAllCustomersEmail();
                     Console.WriteLine("Add Customer functionality coming soon...");
                     Console.ReadKey();
                     break;
