@@ -1,11 +1,11 @@
-using System.Data;
+
 
 namespace alcocodebnb.BookingQueries;
 using Npgsql;
 
 public class NewBooking
     {
-        private static NpgsqlDataSource _database;
+        private static NpgsqlDataSource? _database;
 
         public NewBooking(NpgsqlDataSource database)
         {
@@ -17,16 +17,16 @@ public class NewBooking
         
         public static async void AddNewBooking(int customerId, int accommodationId, DateTime startDateTime, DateTime endDateTime, decimal totalPrice, int numberOfGuests)
         {
-            await using var cmd = _database.CreateCommand("INSERT INTO booking (customerid, accommodationid, startdate, enddate, totalprice, numberofguests) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;");
-            cmd.Parameters.AddWithValue(customerId);
-            cmd.Parameters.AddWithValue(accommodationId);
-            cmd.Parameters.AddWithValue(startDateTime);
-            cmd.Parameters.AddWithValue(endDateTime);
-            cmd.Parameters.AddWithValue(totalPrice);
-            cmd.Parameters.AddWithValue(numberOfGuests);
-            await cmd.ExecuteNonQueryAsync();
+            await using var cmd = _database?.CreateCommand("INSERT INTO booking (customerid, accommodationid, startdate, enddate, totalprice, numberofguests) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;");
+            cmd?.Parameters.AddWithValue(customerId);
+            cmd?.Parameters.AddWithValue(accommodationId);
+            cmd?.Parameters.AddWithValue(startDateTime);
+            cmd?.Parameters.AddWithValue(endDateTime);
+            cmd?.Parameters.AddWithValue(totalPrice);
+            cmd?.Parameters.AddWithValue(numberOfGuests);
+            await cmd?.ExecuteNonQueryAsync()!;
             
-            var newBookingId = (int)await cmd.ExecuteScalarAsync();
+            var newBookingId = (int)(await cmd.ExecuteScalarAsync())!;
             
             if (newBookingId > 0)
             {
@@ -47,8 +47,8 @@ public class NewBooking
         
         public static async void AllLocations()
         {
-            await using var cmd = _database.CreateCommand("SELECT * FROM location ORDER BY id ASC");
-            await using var reader = await cmd.ExecuteReaderAsync();
+            await using var cmd = _database?.CreateCommand("SELECT * FROM location");
+            await using var reader = await cmd?.ExecuteReaderAsync()!;
             while ( await reader.ReadAsync()) 
             {
                 Console.WriteLine($"id: {reader.GetInt32(0)}, " +
@@ -65,9 +65,9 @@ public class NewBooking
         {
             string query = "SELECT id, name, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant FROM accommodation WHERE location = $1;";
 
-            await using var cmd = _database.CreateCommand(query);
-            cmd.Parameters.AddWithValue(chosenId);
-            await using var reader = await cmd.ExecuteReaderAsync();
+            await using var cmd = _database?.CreateCommand(query);
+            cmd?.Parameters.AddWithValue(chosenId);
+            await using var reader = await cmd?.ExecuteReaderAsync()!;
 
             Console.WriteLine("\nAvailable Accommodations:");
             Console.WriteLine("---------------------------------------------------------------------------------------------------------");
@@ -119,10 +119,10 @@ public class NewBooking
 
             try
             {
-                await using var cmd = _database.CreateCommand(query);
-                cmd.Parameters.AddWithValue(bookingId);
+                await using var cmd = _database?.CreateCommand(query);
+                cmd?.Parameters.AddWithValue(bookingId);
 
-                await using var reader = await cmd.ExecuteReaderAsync();
+                await using var reader = await cmd?.ExecuteReaderAsync()!;
 
                 if (await reader.ReadAsync())
                 {

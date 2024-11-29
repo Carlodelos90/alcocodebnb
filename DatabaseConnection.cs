@@ -1,4 +1,3 @@
-using System;
 using Npgsql;
 
 namespace alcocodebnb;
@@ -10,8 +9,7 @@ public class DatabaseConnection
     private readonly string _password = "postgres";
     private readonly string _database = "postgres";
     
-    private NpgsqlDataSource _connection;
-
+    private readonly NpgsqlDataSource _connection;
     public NpgsqlDataSource Connection()
     {
         return _connection;
@@ -20,7 +18,6 @@ public class DatabaseConnection
     public DatabaseConnection()
     {
         _connection = NpgsqlDataSource.Create($"Host={_host};Port={_port};Username={_username};Password={_password};Database={_database}");
-        
-        using var conn = _connection.OpenConnection(); // Kontrollerar att vi har lyckats kopplat upp oss till databasen.
+        using var conn = _connection.OpenConnection();
     }
 }

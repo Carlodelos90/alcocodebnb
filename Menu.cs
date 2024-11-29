@@ -1,22 +1,15 @@
 using alcocodebnb.BookingQueries;
-using Npgsql;
 
 namespace alcocodebnb;
 
 public class Menu
 {
-    private readonly DatabaseConnection _dbConnection;
-    private readonly DatabaseQueries _dbQueries;
-    
-
     public Menu()
     {
         DatabaseConnection db = new();
         DatabaseQueries queries = new(db.Connection());
         CancelBooking cancel = new(db.Connection());
         NewBooking addBooking = new(db.Connection());
-        
-
     }
 
     public void Start()
