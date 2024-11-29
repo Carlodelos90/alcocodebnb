@@ -11,20 +11,20 @@ namespace alcocodebnb;
             _database = database;
         }
 
-    public static async void GetAllCustomers()
-    {
-        await using var cmd = _database?.CreateCommand("SELECT firstname, lastname FROM customer;");
-        await using var reader = await cmd?.ExecuteReaderAsync()!; //The  "!" suppresses the nullable warning
-
-        Console.WriteLine("Customers List:");
-        while (reader.Read())
+        public static async void GetAllCustomers()
         {
-            string firstName = reader.GetString(0);
-            string lastName = reader.GetString(1);
+            await using var cmd = _database?.CreateCommand("SELECT firstname, lastname FROM customer;");
+            await using var reader = await cmd?.ExecuteReaderAsync()!; //The  "!" suppresses the nullable warning
 
-            Console.WriteLine($"- {firstName} {lastName}");
+            Console.WriteLine("Customers List:");
+            while (reader.Read())
+            {
+                string firstName = reader.GetString(0);
+                string lastName = reader.GetString(1);
+
+                Console.WriteLine($"- {firstName} {lastName}");
+            }
         }
-    }
     
         public static async void GetAllCustomersEmail()
         {
