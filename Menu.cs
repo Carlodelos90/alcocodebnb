@@ -76,26 +76,75 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    Console.Clear();
+                    // Collect booking details
                     NewBooking.AllLocations();
-                    Console.WriteLine("Enter the id of the location you would like to book: ");
-                    int chosenId = int.Parse(Console.ReadLine());
-                    NewBooking.ShowAccommodations(chosenId);
-                    
-                    
-                    /*
-                    if (int.TryParse(Console.ReadLine(), out int NewBookingId))
+
+                    Console.Write("\nEnter Location ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int locationId))
                     {
-                        NewBooking.AddNewBooking(NewBookingId);
+                        Console.WriteLine("Invalid Location ID.");
+                        break;
                     }
-                    else
+
+                    NewBooking.ShowAccommodations(locationId);
+
+                    Console.Write("\nEnter Accommodation ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int accommodationId))
                     {
-                        Console.WriteLine("Invalid input. Please enter a valid number.");
-                    }*/
-                    
-                    
-                    //Console.WriteLine("New Booking functionality coming soon...");
+                        Console.WriteLine("Invalid Accommodation ID.");
+                        break;
+                    }
+
+                    Console.Write("Enter Customer ID: ");
+                    if (!int.TryParse(Console.ReadLine(), out int customerId))
+                    {
+                        Console.WriteLine("Invalid Customer ID.");
+                        break;
+                    }
+
+                    Console.Write("Enter Start Date (yyyy-mm-dd): ");
+                    if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
+                    {
+                        Console.WriteLine("Invalid Start Date.");
+                        break;
+                    }
+
+                    Console.Write("Enter End Date (yyyy-mm-dd): ");
+                    if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+                    {
+                        Console.WriteLine("Invalid End Date.");
+                        break;
+                    }
+
+                    if (endDate <= startDate)
+                    {
+                        Console.WriteLine("End date must be after start date.");
+                        break;
+                    }
+
+                    Console.Write("Enter Number of Guests: ");
+                    if (!int.TryParse(Console.ReadLine(), out int numberOfGuests))
+                    {
+                        Console.WriteLine("Invalid number of guests.");
+                        break;
+                    }
+
+                    Console.Write("Enter Total Price: ");
+                    if (!decimal.TryParse(Console.ReadLine(), out decimal totalPrice))
+                    {
+                        Console.WriteLine("Invalid Total Price.");
+                        break;
+                    }
+
+                    Console.Write("Enter Status: ");
+                    //string status = Console.ReadLine();
+
+                    // Add the new booking
+                    NewBooking.AddNewBooking(customerId, accommodationId, startDate, endDate, totalPrice, numberOfGuests);
+                    Console.WriteLine("\nBOOKING COMPLETED! \nPress any key to exit.");
+                    Console.ReadKey();
                     break;
+
                 case "2":
                     CancelBooking.AllBookings();
                     
@@ -108,7 +157,8 @@ public class Menu
                     {
                         Console.WriteLine("Invalid input. Please enter a valid number.");
                     }
-
+                    break;
+            
                     // Placeholder for Cancel booking functionality
                     Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
