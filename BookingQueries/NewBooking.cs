@@ -175,6 +175,22 @@ public class NewBooking
             }
         }
         
+        
+        //Patrik
+        public static async void FilterReview()
+        {
+            await using var cmd = _database?.CreateCommand("SELECT id, name FROM accommodation");
+            await using var reader = await cmd?.ExecuteReaderAsync()!;
+            while ( await reader.ReadAsync()) 
+            {
+                Console.WriteLine($"id: {reader.GetInt32(0)}, -" +
+                                  $"name: {reader.GetString(1)}");
+
+
+            }
+        }
+
+        
 
         /*public static void AddNewBooking(int customerId, int accommodationId, DateTime startDateTime, DateTime endDateTime, decimal totalPrice, int numberOfGuests)
         {

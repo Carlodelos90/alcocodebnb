@@ -59,7 +59,8 @@ public class Menu
                               "\n2. Cancel Booking" +
                               "\n3. Change Booking" +
                               "\n4. Filter price" +
-                              "\n5. Back to Main Menu");
+                              "\n5. Filter review" +
+                              "\n6. Back to Main Menu");
             Console.WriteLine("\nChoose an option: ");
 
             string? input = Console.ReadLine();
@@ -159,6 +160,10 @@ public class Menu
                     break;
                 
                 case "5":
+                    NewBooking.FilterReview();
+                    break;
+                
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");
