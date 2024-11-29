@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using alcocodebnb.BookingQueries;
 using Npgsql;
 
@@ -107,8 +108,58 @@ public class Menu
                     Console.WriteLine("Cancel Booking functionality coming soon...");
                     break;
                 case "3":
-                    // Placeholder for Change Booking functionality
-                    Console.WriteLine("Change Booking functionality coming soon...");
+                    while (true)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("------- Edit Bookings --------");
+                        Console.WriteLine("\n1. Change the date of your booking: " +
+                                          "\n2. Change the amount of guests: " +
+                                          "\n3. Change extra addons" +
+                                          "\n4. Exit");
+                        Console.Write("\nChoose an option: ");
+
+                        string? inputEdit = Console.ReadLine();
+
+                        switch (inputEdit)
+                        {
+                            case "1":
+                                Console.WriteLine("What is the id of the booking you would like to change?: ");
+                                int EditId = Convert.ToInt32(Console.ReadLine());
+                                Console.WriteLine("Start Date: ");
+                                DateTime startdate = Convert.ToDateTime(Console.ReadLine());
+                                Console.WriteLine("End Date: ");
+                                DateTime enddate = Convert.ToDateTime(Console.ReadLine());
+                                EditBooking.ChangeBookingDate(EditId, startdate, enddate);
+                                break;
+
+                            case "2":
+                                Console.WriteLine("Do you want to add or remove guests?");
+                                string addOrRemove = Console.ReadLine();
+                                if (addOrRemove == "add")
+                                {
+                                    
+
+                                }
+                                else if (addOrRemove == "remove")
+                                {
+
+                                }
+                                break;
+                            
+                            case "3":
+                                
+
+
+                            case "4":
+                                return;
+
+                            default:
+                                Console.WriteLine("Invalid option. Press any key to try again.");
+                                Console.ReadKey();
+                                break;
+                        }
+                    }
+
                     break;
                 case "4":
                     return;
