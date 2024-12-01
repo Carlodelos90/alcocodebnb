@@ -1,18 +1,25 @@
+using System.Diagnostics;
 using alcocodebnb.BookingQueries;
+using alcocodebnb.CustomerQueries;
+
+//using alcocodebnb.CustomerQueries;
 
 namespace alcocodebnb;
 
 public class Menu
 {
+    static DatabaseConnection db = new();
+    CustomerManager _customerManager = new CustomerManager(db.Connection());
     public Menu()
     {
-        DatabaseConnection db = new();
         DatabaseQueries queries = new(db.Connection());
         CancelBooking cancel = new(db.Connection());
         NewBooking addBooking = new(db.Connection());
+        CustomerManager customer= new CustomerManager(db.Connection());
+        
     }
 
-    public void Start()
+    public async Task Start()
     {
         
         while (true)
@@ -22,7 +29,8 @@ public class Menu
             Console.WriteLine("\n1. Manage Bookings" +
                               "\n2. Customers" +
                               "\n3. Accommodations" +
-                              "\n4. Exit");
+                              "\n4. Exit" +
+                              "\n5. Misc.");
             Console.Write("\nChoose an option: ");
 
             string? input = Console.ReadLine();
@@ -33,7 +41,7 @@ public class Menu
                     ManageBookings();
                     break;
                 case "2":
-                    ManageCustomers();
+                    await ManageCustomers();
                     break;
                 case "3":
                     ManageAccommodations();
@@ -41,12 +49,65 @@ public class Menu
                 case "4":
                     Console.WriteLine("Goodbye!");
                     return;
+                case "5":
+                    Console.WriteLine("\nChoose an option:" +
+                                      "\n1. Run Synchronous Operation" +
+                                      "\n2. Run Asynchronous Operation");
+                    Console.Write("\nEnter your choice: ");
+                    string? inputMisc = Console.ReadLine();
+                    switch(inputMisc)
+                    {
+                        case "1":
+                            Console.WriteLine("Starting synchronous operation...");
+                            LongRunningOperation();
+                            
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Console.WriteLine($"Main thread working... {i+1}");
+                                await Task.Delay(1000); // Simulate work
+                            }
+                            Console.WriteLine("Finished synchronous operation.");
+                            break;
+        
+                        case "2":
+                            Console.WriteLine("Starting asynchronous operation...");
+                            var task = LongRunningOperationAsync();
+                            Console.WriteLine("Doing other work while waiting...");
+                            // Simulate other work
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Console.WriteLine($"Main thread working... {i+1}");
+                                await Task.Delay(1000); // Simulate work
+                            }
+                            await task;
+                            Console.WriteLine("Finished asynchronous operation.");
+                            break;
+        
+                        default:
+                            Console.WriteLine("Invalid option. Press any key to try again.");
+                            Console.ReadKey();
+                            break;
+                    }
+                    break;
+
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");
                     Console.ReadKey();
                     break;
             }
         }
+    }
+    
+    void LongRunningOperation()
+    {
+        Thread.Sleep(5000); // Simulates a long operation
+        Console.WriteLine("Long-running operation completed.");
+    }
+
+    async Task LongRunningOperationAsync()
+    {
+        await Task.Delay(5000); // Simulates a long operation
+        Console.WriteLine("Long-running operation completed.");
     }
 
     private void ManageBookings()
@@ -141,9 +202,9 @@ public class Menu
                     CancelBooking.AllBookings();
                     
                     Console.WriteLine("Write the id of the booking you would like to cancel: ");
-                    if (int.TryParse(Console.ReadLine(), out int CancelId))
+                    if (int.TryParse(Console.ReadLine(), out int cancelId))
                     {
-                        CancelBooking.DeleteBooking(CancelId);
+                        CancelBooking.DeleteBooking(cancelId);
                     }
                     else
                     {
@@ -173,7 +234,7 @@ public class Menu
         }
     }
 
-    private void ManageCustomers()
+    private async Task ManageCustomers()
     {
         while (true)
         {
@@ -181,7 +242,8 @@ public class Menu
             Console.WriteLine("------- Manage Customers --------");
             Console.WriteLine("\n1. View All Customers" +
                               "\n2. View customer's details" +
-                              "\n3. Back to Main Menu");
+                              "\n3. Add customer" +
+                              "\n4. Back to Main Menu");
             Console.Write("\nChoose an option: ");
 
             string? input = Console.ReadLine();
@@ -200,6 +262,10 @@ public class Menu
                     Console.ReadKey();
                     break;
                 case "3":
+                    Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
+                    await _customerManager.AddCustomerAsync();
+                    break;
+                case "4":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");

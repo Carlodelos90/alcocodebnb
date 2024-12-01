@@ -1,5 +1,3 @@
-
-
 namespace alcocodebnb.BookingQueries;
 using Npgsql;
 
