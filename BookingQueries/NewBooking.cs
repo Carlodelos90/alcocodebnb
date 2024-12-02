@@ -160,19 +160,76 @@ public class NewBooking
         }
         
         //EDVIN 
-        public static async void FilterPrice()
+        public static async void FilterPriceASC()
         {
-            await using var cmd = _database?.CreateCommand("SELECT * FROM location");
+            await using var cmd = _database?.CreateCommand("SELECT id, name, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant FROM accommodation ORDER BY baseprice ASC");
+            
             await using var reader = await cmd?.ExecuteReaderAsync()!;
-            while ( await reader.ReadAsync()) 
+
+            Console.WriteLine("\nAccommodations sorted by price ascending:");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-50}");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+
+            while (await reader.ReadAsync())
             {
-                Console.WriteLine($"id: {reader.GetInt32(0)}, " +
-                                  $"name: {reader.GetString(1)}, " +
-                                  $"country: {reader.GetString(2)}, " +
-                                  $"region: {reader.GetString(3)}");
+                int id = reader.GetInt32(0);
+                string name = reader.GetString(1);
+                double baseprice = reader.GetDouble(2);
+                double rating = reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3);
+                bool pool = reader.GetBoolean(4);
+                bool eveningEntertainment = reader.GetBoolean(5);
+                bool kidsClub = reader.GetBoolean(6);
+                bool restaurant = reader.GetBoolean(7);
 
-
+                Console.WriteLine(
+                    $"{id,-5} " +
+                    $"Hotel: {name,-50} |" +
+                    $"Price: {baseprice,5}$ |" +
+                    $"Rating: {rating,7:N1} |" +
+                    $"Pool:{(pool ? "Yes" : "No"),-5} |" +
+                    $"Evening shows: {(eveningEntertainment ? "Yes" : "No"),-15} |" +
+                    $"Kids club: {(kidsClub ? "Yes" : "No"),-10} |" +
+                    $"Restaurant: {(restaurant ? "Yes" : "No"),-10} |");
             }
+
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+        }
+        
+        public static async void FilterPriceDESC()
+        {
+            await using var cmd = _database?.CreateCommand("SELECT id, name, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant FROM accommodation ORDER BY baseprice DESC");
+            
+            await using var reader = await cmd?.ExecuteReaderAsync()!;
+
+            Console.WriteLine("\nAccommodations sorted by price descending:");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-50}");
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+
+            while (await reader.ReadAsync())
+            {
+                int id = reader.GetInt32(0);
+                string name = reader.GetString(1);
+                double baseprice = reader.GetDouble(2);
+                double rating = reader.IsDBNull(3) ? 0.0 : reader.GetDouble(3);
+                bool pool = reader.GetBoolean(4);
+                bool eveningEntertainment = reader.GetBoolean(5);
+                bool kidsClub = reader.GetBoolean(6);
+                bool restaurant = reader.GetBoolean(7);
+
+                Console.WriteLine(
+                    $"{id,-5} " +
+                    $"Hotel: {name,-50} |" +
+                    $"Price: {baseprice,5}$ |" +
+                    $"Rating: {rating,7:N1} |" +
+                    $"Pool:{(pool ? "Yes" : "No"),-5} |" +
+                    $"Evening shows: {(eveningEntertainment ? "Yes" : "No"),-15} |" +
+                    $"Kids club: {(kidsClub ? "Yes" : "No"),-10} |" +
+                    $"Restaurant: {(restaurant ? "Yes" : "No"),-10} |");
+            }
+
+            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
         }
         
         
