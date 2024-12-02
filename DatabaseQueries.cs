@@ -21,8 +21,10 @@ namespace alcocodebnb;
             {
                 string firstName = reader.GetString(0);
                 string lastName = reader.GetString(1);
-
+                
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"- {firstName} {lastName}");
+                Console.ResetColor();
             }
         }
     
@@ -39,7 +41,7 @@ namespace alcocodebnb;
                 string lastName = reader.GetString(2);
                 string email = reader.GetString(3);
                 string phonenumber = reader.GetString(4);
-
+                
                 Console.WriteLine($"- ID: {id} - {firstName,10} {lastName}'s is: {email,40} an the PHONE: {phonenumber,40}");
             }
         }
