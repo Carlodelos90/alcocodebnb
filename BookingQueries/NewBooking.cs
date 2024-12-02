@@ -1,5 +1,3 @@
-
-
 namespace alcocodebnb.BookingQueries;
 using Npgsql;
 
@@ -15,7 +13,7 @@ public class NewBooking
         
         
         
-        public static async void AddNewBooking(int customerId, int accommodationId, DateTime startDateTime, DateTime endDateTime, decimal totalPrice, int numberOfGuests)
+        public static async Task AddNewBooking(int customerId, int accommodationId, DateTime startDateTime, DateTime endDateTime, decimal totalPrice, int numberOfGuests)
         {
             await using var cmd = _database?.CreateCommand("INSERT INTO booking (customerid, accommodationid, startdate, enddate, totalprice, numberofguests) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;");
             cmd?.Parameters.AddWithValue(customerId);
@@ -32,7 +30,7 @@ public class NewBooking
             {
                 Console.WriteLine("\nBooking added successfully.");
                 // Display the booking summary
-                ShowBookingSummary(newBookingId);
+                await ShowBookingSummary(newBookingId);
             }
             else
             {
@@ -101,7 +99,7 @@ public class NewBooking
         
         
         
-        public static async void ShowBookingSummary(int bookingId)
+        public static async Task ShowBookingSummary(int bookingId)
         {
             string query = @"
                 SELECT 
