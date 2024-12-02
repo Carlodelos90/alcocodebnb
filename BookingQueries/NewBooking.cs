@@ -238,8 +238,8 @@ public class NewBooking
             await using var reader = await cmd?.ExecuteReaderAsync()!;
             while ( await reader.ReadAsync()) 
             {
-                Console.WriteLine($"name:      {reader.GetString(0)}, -" +
-                                  $"rating:     {reader.GetDouble(1)}");
+                Console.WriteLine($"name:      {reader.GetString(0), 40}, -" +
+                                  $"rating:     {reader.GetDouble(1), 7}");
 
 
             }
