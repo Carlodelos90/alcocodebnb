@@ -236,12 +236,12 @@ public class NewBooking
         //Patrik
         public static async void FilterReview()
         {
-            await using var cmd = _database?.CreateCommand("SELECT id, name FROM accommodation");
+            await using var cmd = _database?.CreateCommand("SELECT name, rating FROM accommodation ORDER BY rating DESC");
             await using var reader = await cmd?.ExecuteReaderAsync()!;
             while ( await reader.ReadAsync()) 
             {
-                Console.WriteLine($"id: {reader.GetInt32(0)}, -" +
-                                  $"name: {reader.GetString(1)}");
+                Console.WriteLine($"name:      {reader.GetString(0)}, -" +
+                                  $"rating:     {reader.GetDouble(1)}");
 
 
             }
