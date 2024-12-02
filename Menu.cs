@@ -1,9 +1,5 @@
 using System.Diagnostics;
 using alcocodebnb.BookingQueries;
-using alcocodebnb.CustomerQueries;
-using alcocodebnb.AccommodationQueries;
-
-//using alcocodebnb.CustomerQueries;
 
 namespace alcocodebnb;
 
@@ -18,6 +14,7 @@ public class Menu
         NewBooking addBooking = new(db.Connection());
         CustomerManager customer= new CustomerManager(db.Connection());
         AccommodationManager accommodationManager = new(db.Connection());
+        EditBooking editBooking = new(db.Connection());
     }
 
     public async Task Start()
@@ -117,8 +114,10 @@ public class Menu
         Console.WriteLine("Long-running operation completed.");
     }
 
-    private async void ManageBookings()
+    
+    private async Task ManageBookings()
     {
+        Console.Clear();
         while (true)
         {
             //Console.Clear();
@@ -207,7 +206,7 @@ public class Menu
                     break;
 
                 case "2":
-                    CancelBooking.AllBookings();
+                    EditBooking.GetAllBookingsAsync();
                     
                     Console.WriteLine("Write the id of the booking you would like to cancel: ");
                     if (int.TryParse(Console.ReadLine(), out int cancelId))
@@ -231,6 +230,97 @@ public class Menu
                 
                 case "5":
                     NewBooking.FilterReview();
+                    Console.WriteLine("Cancel Booking functionality coming soon...");
+                    break;
+                case "3":
+                    while (true)
+{
+    Console.Clear();
+    Console.WriteLine("------- Edit Bookings --------");
+    Console.WriteLine("\n1. Change the date of your booking" +
+                      "\n2. Change the number of guests" +
+                      "\n3. Change extra addons" +
+                      "\n4. Exit");
+    Console.Write("\nChoose an option: ");
+
+    string? inputEdit = Console.ReadLine();
+
+    switch (inputEdit)
+    {
+        case "1":
+            Console.Clear();
+            EditBooking.GetAllBookingsAsync();
+
+            Console.Write("Enter the booking ID: ");
+            if (int.TryParse(Console.ReadLine(), out int bookingId))
+            {
+                Console.Write("Enter the new start date (yyyy-MM-dd): ");
+                if (DateTime.TryParse(Console.ReadLine(), out DateTime startdate))
+                {
+                    Console.Write("Enter the new end date (yyyy-MM-dd): ");
+                    if (DateTime.TryParse(Console.ReadLine(), out DateTime enddate))
+                    {
+                        await EditBooking.ChangeBookingDateAsync(bookingId, startdate, enddate);
+                        Console.WriteLine("Booking date updated successfully!");
+                    }
+                    else
+                        Console.WriteLine("Invalid end date.");
+                }
+                else
+                    Console.WriteLine("Invalid start date.");
+            }
+            else
+                Console.WriteLine("Invalid booking ID.");
+            break;
+
+        case "2":
+            Console.Clear();
+            EditBooking.GetAllBookingsAsync();
+            Console.WriteLine("Please enter guest's details");
+            await _customerManager.AddGuestAsync();
+            
+            break;
+
+        case "3":
+            Console.Clear();
+            EditBooking.GetAllAddonsAsync();
+            Console.Write("Enter the booking ID: ");
+            if (int.TryParse(Console.ReadLine(), out int extrabookingid))
+            {
+                Console.Write("Enter the extra service ID: ");
+                if (int.TryParse(Console.ReadLine(), out int extraserviceid))
+                {
+                    Console.Write("Enter the quantity: ");
+                    if (int.TryParse(Console.ReadLine(), out int quantity))
+                    {
+                        await EditBooking.ChangeBoardOptionAsync(extraserviceid, quantity, extrabookingid);
+                        Console.WriteLine("Extra addons updated successfully!");
+                    }
+                    else
+                        Console.WriteLine("Invalid quantity.");
+                }
+                else
+                    Console.WriteLine("Invalid extra service ID.");
+            }
+            else
+                Console.WriteLine("Invalid booking ID.");
+            break;
+
+        case "4":
+            Console.WriteLine("Exiting... Goodbye!");
+            return;
+
+        default:
+            Console.WriteLine("Invalid option. Press any key to try again.");
+            Console.ReadKey();
+            break;
+    }
+
+    Console.WriteLine("Press any key to continue...");
+    Console.ReadKey();
+}
+
+
                     break;
                 
                 case "6":
