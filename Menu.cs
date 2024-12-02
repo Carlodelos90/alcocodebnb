@@ -53,8 +53,8 @@ public class Menu
                 case "5":
                     Console.WriteLine("\nChoose an option:" +
                                       "\n1. Run Synchronous Operation" +
-                                      "\n2. Run Asynchronous Operation" +
-                                      "\n3. Add guest");
+                                      "\n2. Run Asynchronous Operation"+
+                                      "\n3. Calc test");
                     Console.Write("\nEnter your choice: ");
                     string? inputMisc = Console.ReadLine();
                     switch(inputMisc)
@@ -86,6 +86,8 @@ public class Menu
                             break;
                         
                         case "3":
+                            //Console.WriteLine(calc);
+                            break;
 
         
                         default:
