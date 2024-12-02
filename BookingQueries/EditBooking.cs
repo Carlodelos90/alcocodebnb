@@ -10,7 +10,7 @@ public class EditBooking
         _database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-    public static async Task ChangeBoardOptionAsync(int extraserviceid, int quantity, int bookingid)
+/*    public static async Task ChangeBoardOptionAsync(int extraserviceid, int quantity, int bookingid)
     {
         try
         {
@@ -31,8 +31,8 @@ public class EditBooking
             throw;
         }
     }
-
-    public static async Task ChangeGuestsAsync(int id, int numberofguests)
+*/
+    /*public static async Task ChangeGuestsAsync(int id, int numberofguests)
     {
         try
         {
@@ -49,29 +49,9 @@ public class EditBooking
             Console.WriteLine($"Error updating guests: {ex.Message}");
             throw;
         }
-    }
-
-    /*public static async Task ChangeBookingDateAsync(int id, DateTime startDate, DateTime endDate)
-    {
-        try
-        {
-            await using var cmdBooking = _database.CreateCommand(
-                "UPDATE booking " +
-                "SET startdate = @StartDate, enddate = @EndDate " +
-                "WHERE id = @Id");
-
-            cmdBooking.Parameters.AddWithValue("@StartDate", startDate);
-            cmdBooking.Parameters.AddWithValue("@EndDate", endDate);
-            cmdBooking.Parameters.AddWithValue("@Id", id);
-
-            await cmdBooking.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating booking date: {ex.Message}");
-            throw;
-        }
     }*/
+
+    
     
     public static async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
     {
@@ -141,6 +121,8 @@ public class EditBooking
             Console.WriteLine($"- Booking ID: {bookingid} - Extra service ID: {extraserviceid,10} - Quantity: {quantity}");
         }
     }
+    
+    
     public void ChangeBooking()
     {
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");

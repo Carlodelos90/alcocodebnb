@@ -197,20 +197,9 @@ public class Menu
         case "2":
             Console.Clear();
             EditBooking.GetAllBookingsAsync();
-            Console.Write("Enter the booking ID: ");
-            if (int.TryParse(Console.ReadLine(), out int guestBookingId))
-            {
-                Console.Write("Enter the new number of guests: ");
-                if (int.TryParse(Console.ReadLine(), out int numberofguests))
-                {
-                    await EditBooking.ChangeGuestsAsync(guestBookingId, numberofguests);
-                    Console.WriteLine("Number of guests updated successfully!");
-                }
-                else
-                    Console.WriteLine("Invalid number of guests.");
-            }
-            else
-                Console.WriteLine("Invalid booking ID.");
+            Console.WriteLine("Please enter guest's details");
+            await _customerManager.AddGuestAsync();
+            
             break;
 
         case "3":
