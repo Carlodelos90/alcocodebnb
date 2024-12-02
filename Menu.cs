@@ -226,7 +226,7 @@ public class Menu
                     break;
                 
                 case "4":
-                   NewBooking.FilterPriceASC();
+                   FilterPrice();
                     break;
                 
                 case "5":
@@ -239,6 +239,40 @@ public class Menu
                     break;
                 
                 case "7":
+                    return;
+                default:
+                    Console.WriteLine("Invalid option. Press any key to try again.");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+    
+    private void FilterPrice()
+    {
+        while (true)
+        {
+            //Console.Clear();
+            Console.WriteLine("------- Sort accommodations by price --------");
+            Console.WriteLine("\n1. Sort accommodations by price ascending" +
+                              "\n2. Sort accommodations by price descending" +
+                              "\n3. Back to Manage Bookings");
+            Console.WriteLine("\nChoose an option: ");
+
+            string? input = Console.ReadLine();
+
+            switch (input)
+            { 
+                case "1":
+                    // Collect booking details
+                    NewBooking.FilterPriceASC();
+                    Console.WriteLine("Press Enter 2 times to go back to 'manage bookings'");
+                    return;
+                
+                case "2": 
+                    NewBooking.FilterPriceDESC();
+                    return;
+                case "3":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");
