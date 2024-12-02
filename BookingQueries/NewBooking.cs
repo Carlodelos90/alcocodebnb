@@ -158,7 +158,7 @@ public class NewBooking
         }
         
         //EDVIN 
-        public static async void FilterPriceASC()
+        public static async void FilterPriceAsc()
         {
             await using var cmd = _database?.CreateCommand("SELECT id, name, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant FROM accommodation ORDER BY baseprice ASC");
             
@@ -194,7 +194,7 @@ public class NewBooking
             Console.WriteLine("---------------------------------------------------------------------------------------------------------");
         }
         
-        public static async void FilterPriceDESC()
+        public static async void FilterPriceDesc()
         {
             await using var cmd = _database?.CreateCommand("SELECT id, name, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant FROM accommodation ORDER BY baseprice DESC");
             

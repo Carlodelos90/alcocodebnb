@@ -3,7 +3,7 @@ using Npgsql;
 
 public class EditBooking
 {
-    private static NpgsqlDataSource _database;
+    private static NpgsqlDataSource? _database;
 
     public EditBooking(NpgsqlDataSource database)
     {
@@ -57,7 +57,7 @@ public class EditBooking
     {
         try
         {
-            await using var cmdInsert = _database.CreateCommand(
+            await using var cmdInsert = _database?.CreateCommand(
                 "UPDATE booking " +
                 "SET startdate = @startdate, enddate = @enddate " +
                 "WHERE id = @Id AND NOT EXISTS ( " +

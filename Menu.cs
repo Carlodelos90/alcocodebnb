@@ -407,12 +407,12 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    NewBooking.FilterPriceASC();
+                    NewBooking.FilterPriceAsc();
                     Console.WriteLine("Press any key to go back to 'Manage Bookings'");
                     Console.ReadKey();
                     break;
                 case "2":
-                    NewBooking.FilterPriceDESC();
+                    NewBooking.FilterPriceDesc();
                     Console.WriteLine("Press any key to go back to 'Manage Bookings'");
                     Console.ReadKey();
                     break;
