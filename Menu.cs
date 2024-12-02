@@ -102,7 +102,7 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    CreateNewBookingAsync();
+                    await CreateNewBookingAsync();
                     break;
                 case "2":
                     CancelBookingAsync();
@@ -129,7 +129,7 @@ public class Menu
         }
     }
 
-    private void  CreateNewBookingAsync()
+    private async Task CreateNewBookingAsync()
     {
         try
         {
@@ -137,7 +137,7 @@ public class Menu
             Console.WriteLine("------- New Booking --------");
 
             // Display all locations
-            NewBooking.AllLocations();
+            await NewBooking.AllLocationsAsync();
 
             Console.Write("\nEnter Location ID: ");
             if (!int.TryParse(Console.ReadLine(), out int locationId))
@@ -147,7 +147,7 @@ public class Menu
             }
 
             // Show accommodations based on location
-            NewBooking.ShowAccommodations(locationId);
+            await NewBooking.ShowAccommodationsAsync(locationId);
 
             Console.Write("\nEnter Accommodation ID: ");
             if (!int.TryParse(Console.ReadLine(), out int accommodationId))
@@ -177,12 +177,6 @@ public class Menu
                 return;
             }
 
-            if (endDate <= startDate)
-            {
-                Console.WriteLine("End date must be after start date.");
-                return;
-            }
-
             Console.Write("Enter Number of Guests: ");
             if (!int.TryParse(Console.ReadLine(), out int numberOfGuests))
             {
@@ -190,16 +184,8 @@ public class Menu
                 return;
             }
 
-            Console.Write("Enter Total Price: ");
-            if (!decimal.TryParse(Console.ReadLine(), out decimal totalPrice))
-            {
-                Console.WriteLine("Invalid Total Price.");
-                return;
-            }
-
             // Add the new booking
-            NewBooking.AddNewBooking(customerId, accommodationId, startDate, endDate, totalPrice, numberOfGuests);
-            Console.WriteLine("\nBOOKING COMPLETED! Don't forget to add the guests into the booking.");
+            await NewBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
         }
         catch (Exception ex)
         {
@@ -407,12 +393,12 @@ public class Menu
             switch (input)
             {
                 case "1":
-                    NewBooking.FilterPriceAsc();
+                    NewBooking.FilterPriceAscAsync();
                     Console.WriteLine("Press any key to go back to 'Manage Bookings'");
                     Console.ReadKey();
                     break;
                 case "2":
-                    NewBooking.FilterPriceDesc();
+                    NewBooking.FilterPriceDescAsync();
                     Console.WriteLine("Press any key to go back to 'Manage Bookings'");
                     Console.ReadKey();
                     break;
@@ -431,7 +417,7 @@ public class Menu
         try
         {
             Console.Clear();
-            NewBooking.FilterReview();
+            NewBooking.FilterReviewAsync();
             Console.WriteLine("Filter Review functionality coming soon...");
         }
         catch (Exception ex)
