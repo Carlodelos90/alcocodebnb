@@ -51,7 +51,7 @@ public class EditBooking
         }
     }
 
-    public static async Task ChangeBookingDateAsync(int id, DateTime startDate, DateTime endDate)
+    /*public static async Task ChangeBookingDateAsync(int id, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -71,7 +71,40 @@ public class EditBooking
             Console.WriteLine($"Error updating booking date: {ex.Message}");
             throw;
         }
+    }*/
+    
+    public static async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
+    {
+        try
+        {
+            await using var cmdInsert = _database.CreateCommand(
+                "UPDATE booking " +
+                "SET startdate = @startdate, enddate = @enddate " +
+                "WHERE id = @Id AND NOT EXISTS ( " +
+                "    SELECT 1 FROM booking " +
+                "    WHERE accommodationid = (SELECT accommodationid FROM booking WHERE id = @id) " +
+                "    AND id != @Id " +
+                "    AND (startdate <= @EndDate AND enddate >= @StartDate)" +
+                ");");
+
+            cmdInsert.Parameters.AddWithValue("@StartDate", startdate);
+            cmdInsert.Parameters.AddWithValue("@EndDate", enddate);
+            cmdInsert.Parameters.AddWithValue("@Id", id);
+
+            var rowsAffected = await cmdInsert.ExecuteNonQueryAsync();
+
+            if (rowsAffected == 0)
+            {
+                throw new InvalidOperationException("The new booking dates overlap with an existing booking for the same accommodation or the booking does not exist.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating booking date: {ex.Message}");
+            throw;
+        }
     }
+
     
     public static async void GetAllBookingsAsync()
     {
@@ -112,4 +145,8 @@ public class EditBooking
     {
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");
     }
+    
+    
+    
+
 }

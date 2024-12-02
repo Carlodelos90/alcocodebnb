@@ -139,7 +139,7 @@ public class Menu
                     break;
 
                 case "2":
-                    CancelBooking.AllBookings();
+                    EditBooking.GetAllBookingsAsync();
                     
                     Console.WriteLine("Write the id of the booking you would like to cancel: ");
                     if (int.TryParse(Console.ReadLine(), out int CancelId))
