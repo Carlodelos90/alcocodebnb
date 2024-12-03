@@ -129,9 +129,9 @@ public class NewBooking
             await using var reader = await cmd.ExecuteReaderAsync();
 
             Console.WriteLine("\nAvailable Locations:");
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
             Console.WriteLine($"{"ID",-5} {"Name",-30} {"Country",-20} {"Region",-20}");
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
@@ -143,7 +143,7 @@ public class NewBooking
                 Console.WriteLine($"{id,-5} {name,-30} {country,-20} {region,-20}");
             }
 
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -172,9 +172,9 @@ public class NewBooking
             await using var reader = await cmd.ExecuteReaderAsync();
 
             Console.WriteLine("\nAvailable Accommodations:");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"{"ID",-5} {"Name",-50}");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("---------------------------------------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-40} {"BasePrice",-10} {"Rating",-7} {"Pool",-6} {"Shows",-18} {"Kids Club",-12} {"Restaurant",-12}");
+            Console.WriteLine("---------------------------------------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
@@ -189,16 +189,16 @@ public class NewBooking
 
                 Console.WriteLine(
                     $"{id,-5} " +
-                    $"Hotel: {name,-50} |" +
-                    $"Price: {basePrice,5:C} |" +
-                    $"Rating: {rating,7:N1} |" +
-                    $"Pool: {(pool ? "Yes" : "No"),-5} |" +
-                    $"Evening Shows: {(eveningEntertainment ? "Yes" : "No"),-15} |" +
-                    $"Kids Club: {(kidsClub ? "Yes" : "No"),-10} |" +
-                    $"Restaurant: {(restaurant ? "Yes" : "No"),-10} |");
+                    $"{name,-40} " +
+                    $"{basePrice, -10:C} " +
+                    $"{rating, -7:N1} " +
+                    $"{(pool ? "Yes" : "No"),-6} " +
+                    $"{(eveningEntertainment ? "Yes" : "No"),-18} " +
+                    $"{(kidsClub ? "Yes" : "No"),-12} " +
+                    $"{(restaurant ? "Yes" : "No"),-12}");
             }
 
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("---------------------------------------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -247,7 +247,7 @@ public class NewBooking
                 int numberOfGuests = reader.GetInt32(6);
 
                 Console.WriteLine("\nBooking Summary:");
-                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------------------");
                 Console.WriteLine($"Booking ID       : {id}");
                 Console.WriteLine($"Customer Name    : {customerName}");
                 Console.WriteLine($"Accommodation    : {accommodationName}");
@@ -255,9 +255,9 @@ public class NewBooking
                 Console.WriteLine($"End Date         : {endDate.ToShortDateString()}");
                 Console.WriteLine($"Total Price      : {totalPrice:C}");
                 Console.WriteLine($"Number of Guests : {numberOfGuests}");
-                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------------------");
                 Console.WriteLine("The invoice was sent to the customer's email address and the accommodation's email address.");
-                Console.WriteLine("--------------------------------------------------");
+                Console.WriteLine("--------------------------------------------------------------");
             }
             else
             {
@@ -290,9 +290,9 @@ public class NewBooking
             await using var reader = await cmd.ExecuteReaderAsync();
 
             Console.WriteLine("\nAccommodations Sorted by Price (Ascending):");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"{"ID",-5} {"Name",-50} {"Price",-10}");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-40} {"Price",-12}");
+            Console.WriteLine("--------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
@@ -302,11 +302,11 @@ public class NewBooking
 
                 Console.WriteLine(
                     $"{id,-5} " +
-                    $"{name,-50} " +
-                    $"{basePrice,10:C}");
+                    $"{name,-40} " +
+                    $"{basePrice, -12:C}");
             }
 
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -334,9 +334,9 @@ public class NewBooking
             await using var reader = await cmd.ExecuteReaderAsync();
 
             Console.WriteLine("\nAccommodations Sorted by Price (Descending):");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"{"ID",-5} {"Name",-50} {"Price",-10}");
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-40} {"Price",-12}");
+            Console.WriteLine("--------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
@@ -346,11 +346,11 @@ public class NewBooking
 
                 Console.WriteLine(
                     $"{id,-5} " +
-                    $"{name,-50} " +
-                    $"{basePrice,10:C}");
+                    $"{name,-40} " +
+                    $"{basePrice, -12:C}");
             }
 
-            Console.WriteLine("---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -378,26 +378,25 @@ public class NewBooking
             await using var reader = await cmd.ExecuteReaderAsync();
 
             Console.WriteLine("\nAccommodations Sorted by Rating (Descending):");
-            Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine($"{"Name",-50} {"Rating",-10}");
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine($"{"Name",-40} {"Rating",-10}");
+            Console.WriteLine("--------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
                 string name = reader.GetString(0);
                 double rating = reader.IsDBNull(1) ? 0.0 : reader.GetDouble(1);
 
-                Console.WriteLine($"{name,-50} {rating,10:N1}");
+                Console.WriteLine($"{name,-40} {rating, -10:N1}");
             }
 
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error filtering accommodations by review: {ex.Message}");
         }
     }
-    
     
     #region SortByDistanceToCenter
 
@@ -420,29 +419,26 @@ public class NewBooking
             await using var cmd = _database.CreateCommand(query);
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            Console.WriteLine("\nAccommodations Sorted by distance to center (Ascending):");
-            Console.WriteLine(
-                "---------------------------------------------------------------------------------------------------------");
-            Console.WriteLine($"{"ID",-5} {"Name",-50} {"Price",-12} {"DistanceToCenter",-12}");
-            Console.WriteLine(
-                "---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("\nAccommodations Sorted by Distance to Center (Ascending):");
+            Console.WriteLine("--------------------------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-40} {"Price",-12} {"DistanceToCenter",-18}");
+            Console.WriteLine("--------------------------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
                 int id = reader.GetInt32(0);
                 string name = reader.GetString(1);
-                decimal basePrice = reader.GetDecimal(2);
+                decimal basePrice = reader.GetDecimal(4);
                 decimal distanceToCenter = reader.GetDecimal(3);
 
                 Console.WriteLine(
                     $"{id,-5} " +
-                    $"{name,-50} " +
-                    $"{basePrice,10}$" +
-                    $"{distanceToCenter,10}");
+                    $"{name,-40} " +
+                    $"{basePrice, -12:C} " +
+                    $"{distanceToCenter, -18:F1}");
             }
 
-            Console.WriteLine(
-                "---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -472,20 +468,20 @@ public class NewBooking
             await using var cmd = _database.CreateCommand(query);
             await using var reader = await cmd.ExecuteReaderAsync();
 
-            Console.WriteLine("\nSorted by distance to beach (Descending):");
-            Console.WriteLine("--------------------------------------------------");
-            Console.WriteLine($"{"Name",-50} {"Distance",-10}");
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("\nAccommodations Sorted by Distance to Beach (Descending):");
+            Console.WriteLine("--------------------------------------------------------------");
+            Console.WriteLine($"{"Name",-40} {"DistanceToBeach",-15}");
+            Console.WriteLine("--------------------------------------------------------------");
 
             while (await reader.ReadAsync())
             {
                 string name = reader.GetString(0);
                 double distancetobeach = reader.IsDBNull(1) ? 0.0 : reader.GetDouble(1);
 
-                Console.WriteLine($"{name,-50} {distancetobeach,10:N1}");
+                Console.WriteLine($"{name,-40} {distancetobeach, -15:N1}");
             }
 
-            Console.WriteLine("--------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------------");
         }
         catch (Exception ex)
         {
@@ -493,19 +489,4 @@ public class NewBooking
         }
     }
     #endregion
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

@@ -1,809 +1,800 @@
 using alcocodebnb.BookingQueries;
 using alcocodebnb.CustomerQueries;
 using alcocodebnb.AccommodationQueries;
+using alcocodebnb.ConsoleUtilities;
+using System;
+using System.Threading.Tasks;
 
-
-namespace alcocodebnb;
-
-public class Menu
+namespace alcocodebnb
 {
-    static readonly DatabaseConnection Db = new();
-    CustomerManager _customerManager = new CustomerManager(Db.Connection());
-    AccommodationManager _accommodationManager = new(Db.Connection());
-
-    public Menu()
+    public class Menu
     {
-        DatabaseQueries queries = new(Db.Connection());
-        CancelBooking cancel = new(Db.Connection());
-        NewBooking addBooking = new(Db.Connection());
-        CustomerManager customer = new CustomerManager(Db.Connection());
-        AccommodationManager accommodationManager = new(Db.Connection());
-        EditBooking editBooking = new(Db.Connection());
-        
-    }
+        static readonly DatabaseConnection Db = new();
+        CustomerManager _customerManager = new CustomerManager(Db.Connection());
+        AccommodationManager _accommodationManager = new(Db.Connection());
 
-    #region Start method of the menu
-    public async Task Start()
-    {
-        while (true)
+        // Instance of ApplicationConsole for color management
+        private readonly ApplicationConsole _console = new ApplicationConsole();
+
+        public Menu()
         {
-            DisplayMainMenu();
-            string? input = Console.ReadLine();
+            DatabaseQueries queries = new(Db.Connection());
+            CancelBooking cancel = new(Db.Connection());
+            NewBooking addBooking = new(Db.Connection());
+            CustomerManager customer = new CustomerManager(Db.Connection());
+            AccommodationManager accommodationManager = new(Db.Connection());
+            EditBooking editBooking = new(Db.Connection());
+        }
 
-            switch (input)
+        #region Start method of the menu
+        public async Task Start()
+        {
+            while (true)
             {
-                case "1":
-                    await ManageBookingsAsync();
-                    break;
-                case "2":
-                    await ManageCustomersAsync();
-                    break;
-                case "3":
-                    ManageAccommodationsAsync();
-                    break;
-                case "4":
-                    Console.WriteLine("Goodbye!");
-                    return;
-                case "5":
-                    await ManageMiscellaneousAsync();
-                    break;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
+                DisplayMainMenu();
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        await ManageBookingsAsync();
+                        break;
+                    case "2":
+                        await ManageCustomersAsync();
+                        break;
+                    case "3":
+                        ManageAccommodationsAsync();
+                        break;
+                    case "4":
+                        _console.WriteSuccess("Goodbye!");
+                        return;
+                    case "5":
+                        await ManageMiscellaneousAsync();
+                        break;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
             }
         }
-    }
-#endregion
-    
-    #region Menu Display Methods
+        #endregion
 
-    private void DisplayMainMenu()
-    {
-        Console.Clear();
-        Console.WriteLine("------- Welcome to AlcoCodeBNB --------");
-        Console.WriteLine("\n1. Manage Bookings" +
-                          "\n2. Manage Customers" +
-                          "\n3. Manage Accommodations" +
-                          "\n4. Exit" +
-                          "\n5. Miscellaneous");
-        Console.Write("\nChoose an option: ");
-    }
+        #region Menu Display Methods
 
-    private void DisplaySubMenu(string title, string[] options)
-    {
-        Console.Clear();
-        Console.WriteLine($"------- {title} --------");
-        for (int i = 0; i < options.Length; i++)
-        {
-            Console.WriteLine($"\n{i + 1}. {options[i]}");
-        }
-        Console.Write("\nChoose an option: ");
-    }
-
-    #endregion
-
-    #region Manage Bookings
-
-    private async Task ManageBookingsAsync()
-    {
-        while (true)
-        {
-            string[] bookingOptions = new[]
-            {
-                "New Booking (OBS! if new customer, make a new customer account first)",
-                "Cancel Booking",
-                "Change Booking",
-                "Filter Price",
-                "Filter Review",
-                "Add Guests to the Booking",
-                "Sort by distance to beach",
-                "Sort by distance to center",
-                "Back to Main Menu"
-            };
-
-            DisplaySubMenu("Manage Bookings", bookingOptions);
-            string? input = Console.ReadLine();
-
-            switch (input)
-            {
-                case "1":
-                    await CreateNewBookingAsync();
-                    break;
-                case "2":
-                    CancelBookingAsync();
-                    break;
-                case "3":
-                    await ChangeBookingAsync();
-                    break;
-                case "4":
-                    FilterPriceAsync();
-                    break;
-                case "5":
-                    FilterReviewAsync();
-                    break;
-                case "6":
-                    await AddGuestsToBookingAsync();
-                    break;
-                case "7":
-                    await SortByDistanceToBeach();
-                    Console.WriteLine("Sort by beach");
-                    Console.ReadLine();
-                    break;
-                case "8":
-                    await NewBooking.SortByDistanceToCenterAsync();
-                    Console.ReadLine();
-                    break;
-                
-                case "9":
-                    return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-    }
-
-    private async Task CreateNewBookingAsync()
-    {
-        try
+        private void DisplayMainMenu()
         {
             Console.Clear();
-            Console.WriteLine("------- New Booking --------");
-
-            // Display all locations
-            await NewBooking.AllLocationsAsync();
-
-            Console.Write("\nEnter Location ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int locationId))
-            {
-                Console.WriteLine("Invalid Location ID.");
-                return;
-            }
-
-            // Show accommodations based on location
-            await NewBooking.ShowAccommodationsAsync(locationId);
-
-            Console.Write("\nEnter Accommodation ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int accommodationId))
-            {
-                Console.WriteLine("Invalid Accommodation ID.");
-                return;
-            }
-
-            Console.Write("Enter Customer ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int customerId))
-            {
-                Console.WriteLine("Invalid Customer ID.");
-                return;
-            }
-
-            Console.Write("Enter Start Date (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
-            {
-                Console.WriteLine("Invalid Start Date.");
-                return;
-            }
-
-            Console.Write("Enter End Date (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
-            {
-                Console.WriteLine("Invalid End Date.");
-                return;
-            }
-
-            Console.Write("Enter Number of Guests: ");
-            if (!int.TryParse(Console.ReadLine(), out int numberOfGuests))
-            {
-                Console.WriteLine("Invalid number of guests.");
-                return;
-            }
-
-            // Add the new booking
-            await NewBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
+            _console.WriteMenuTitle("------- Welcome to AlcoCodeBNB --------");
+            _console.WriteInfo("\n1. Manage Bookings" +
+                              "\n2. Manage Customers" +
+                              "\n3. Manage Accommodations" +
+                              "\n4. Exit" +
+                              "\n5. Miscellaneous");
+            _console.WriteInfo("Choose an option: ");
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error creating booking: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to return...");
-            Console.ReadKey();
-        }
-    }
 
-    private void CancelBookingAsync()
-    {
-        try
+        private void DisplaySubMenu(string title, string[] options)
         {
             Console.Clear();
-            Console.WriteLine("------- Cancel Booking --------");
-            EditBooking.GetAllBookingsAsync();
-
-            Console.Write("Enter the ID of the booking you want to cancel: ");
-            if (int.TryParse(Console.ReadLine(), out int cancelId))
+            _console.WriteMenuTitle($"------- {title} --------");
+            for (int i = 0; i < options.Length; i++)
             {
-                CancelBooking.DeleteBooking(cancelId);
-                Console.WriteLine("Booking cancelled successfully.");
+                _console.WriteMenuOption($"{i + 1}. {options[i]}");
             }
-            else
+            _console.WriteInfo("Choose an option: ");
+        }
+
+        #endregion
+
+        #region Manage Bookings
+
+        private async Task ManageBookingsAsync()
+        {
+            while (true)
             {
-                Console.WriteLine("Invalid input. Please enter a valid number.");
+                string[] bookingOptions = new[]
+                {
+                    "New Booking (OBS! if new customer, make a new customer account first)",
+                    "Cancel Booking",
+                    "Change Booking",
+                    "Filter Price",
+                    "Filter Review",
+                    "Add Guests to the Booking",
+                    "Sort by distance to beach",
+                    "Sort by distance to center",
+                    "Back to Main Menu"
+                };
+
+                DisplaySubMenu("Manage Bookings", bookingOptions);
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        await CreateNewBookingAsync();
+                        break;
+                    case "2":
+                        await CancelBookingAsync();
+                        break;
+                    case "3":
+                        await ChangeBookingAsync();
+                        break;
+                    case "4":
+                        await FilterPriceAsync();
+                        break;
+                    case "5":
+                        await FilterReviewAsync();
+                        break;
+                    case "6":
+                        await AddGuestsToBookingAsync();
+                        break;
+                    case "7":
+                        await SortByDistanceToBeach();
+                        Console.ReadLine();
+                        break;
+                    case "8":
+                        await NewBooking.SortByDistanceToCenterAsync();
+                        Console.ReadLine();
+                        break;
+
+                    case "9":
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error cancelling booking: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
 
-    private async Task ChangeBookingAsync()
-    {
-        while (true)
+        private async Task CreateNewBookingAsync()
         {
-            string[] editBookingOptions = new[]
+            try
             {
-                "Change the Date of Your Booking",
-                "Change the Number of Guests",
-                "Change Addons",
-                "Exit"
-            };
+                Console.Clear();
+                _console.WriteMenuTitle("------- New Booking --------");
 
-            DisplaySubMenu("Edit Bookings", editBookingOptions);
-            string? inputEdit = Console.ReadLine();
+                // Display all locations
+                await NewBooking.AllLocationsAsync();
 
-            switch (inputEdit)
-            {
-                case "1":
-                    await ChangeBookingDateAsync();
-                    break;
-                case "2":
-                    await ChangeNumberOfGuestsAsync();
-                    break;
-                case "3":
-                    await UpdateBookingExtrasAsync();
-                    break;
-                
-                case "4":
-                    Console.WriteLine("Exiting... Goodbye!");
+                _console.WriteInfo("Enter Location ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int locationId))
+                {
+                    _console.WriteError("Invalid Location ID.");
                     return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-    }
-    
+                }
 
-    private async Task ChangeBookingDateAsync()
-    {
-        try
-        {
-            Console.Clear();
-            EditBooking.GetAllBookingsAsync();
+                // Show accommodations based on location
+                await NewBooking.ShowAccommodationsAsync(locationId);
 
-            Console.Write("Enter the Booking ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int bookingId))
-            {
-                Console.WriteLine("Invalid Booking ID.");
-                return;
-            }
-
-            Console.Write("Enter the New Start Date (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime newStartDate))
-            {
-                Console.WriteLine("Invalid Start Date.");
-                return;
-            }
-
-            Console.Write("Enter the New End Date (yyyy-MM-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime newEndDate))
-            {
-                Console.WriteLine("Invalid End Date.");
-                return;
-            }
-
-            if (newEndDate <= newStartDate)
-            {
-                Console.WriteLine("End date must be after start date.");
-                return;
-            }
-
-            await EditBooking.ChangeBookingDateAsync(bookingId, newStartDate, newEndDate);
-            Console.WriteLine("Booking date updated successfully!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error changing booking date: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
-
-    private async Task ChangeNumberOfGuestsAsync()
-    {
-        try
-        {
-            Console.Clear();
-            DatabaseQueries.GetAllCustomers();
-            Console.WriteLine("Please enter guest's details:");
-            await _customerManager.AddGuestAsync();
-            Console.WriteLine("Number of guests updated successfully!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error changing number of guests: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
-
-    public async Task UpdateBookingExtrasAsync()
-    {
-        try
-        {
-            Console.Write("Enter the Booking ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int bookingId))
-            {
-                Console.WriteLine("Invalid Booking ID.");
-                return;
-            }
-
-            Console.Write("Enter the Extra Service ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int extraServiceId))
-            {
-                Console.WriteLine("Invalid Extra Service ID.");
-                return;
-            }
-
-            Console.Write("Enter the Quantity: ");
-            if (!int.TryParse(Console.ReadLine(), out int quantity))
-            {
-                Console.WriteLine("Invalid Quantity.");
-                return;
-            }
-
-            // Correctly call the implemented method
-            await EditBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error changing extra addons: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
-
-    private void FilterPriceAsync()
-    {
-        while (true)
-        {
-            string[] filterPriceOptions = new[]
-            {
-                "Sort accommodations by price ascending",
-                "Sort accommodations by price descending",
-                "Back to Manage Bookings"
-            };
-
-            DisplaySubMenu("Sort Accommodations by Price", filterPriceOptions);
-            string? input = Console.ReadLine();
-
-            switch (input)
-            {
-                case "1":
-                    NewBooking.FilterPriceAscAsync();
-                    Console.WriteLine("Press any key to go back to 'Manage Bookings'");
-                    Console.ReadKey();
-                    break;
-                case "2":
-                    NewBooking.FilterPriceDescAsync();
-                    Console.WriteLine("Press any key to go back to 'Manage Bookings'");
-                    Console.ReadKey();
-                    break;
-                case "3":
+                _console.WriteInfo("Enter Accommodation ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int accommodationId))
+                {
+                    _console.WriteError("Invalid Accommodation ID.");
                     return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-    }
+                }
 
-    private void FilterReviewAsync()
-    {
-        try
-        {
-            Console.Clear();
-            NewBooking.FilterReviewAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error filtering reviews: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
-
-    
-    
-    private async Task SortByDistanceToBeach()
-    {
-        try
-        {
-            Console.Clear();
-            NewBooking.SortByDistanceToBeach();
-            Console.WriteLine("Sort distance beach functionality coming soon...");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error filtering distance to beach: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to continue...");
-            Console.ReadKey();
-        }
-    }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    private async Task AddGuestsToBookingAsync()
-    {
-        try
-        {
-            Console.WriteLine("Please enter guest's details:");
-            await _customerManager.AddGuestAsync();
-            Console.WriteLine("Guests added successfully!");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error adding guests: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    #endregion
-
-    #region Manage Customers
-
-    private async Task ManageCustomersAsync()
-    {
-        while (true)
-        {
-            string[] customerOptions = new[]
-            {
-                "View All Customers",
-                "View Customer's Details",
-                "Add Customer",
-                "Back to Main Menu"
-            };
-
-            DisplaySubMenu("Manage Customers", customerOptions);
-            string? input = Console.ReadLine();
-
-            switch (input)
-            {
-                case "1":
-                    ViewAllCustomersAsync();
-                    break;
-                case "2":
-                    ViewCustomerDetailsAsync();
-                    break;
-                case "3":
-                    await AddCustomerAsync();
-                    break;
-                case "4":
+                _console.WriteInfo("Enter Customer ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int customerId))
+                {
+                    _console.WriteError("Invalid Customer ID.");
                     return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-    }
+                }
 
-    private void ViewAllCustomersAsync()
-    {
-        try
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            DatabaseQueries.GetAllCustomers();
-            Console.ResetColor();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error viewing customers: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("\nPress any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    private void ViewCustomerDetailsAsync()
-    {
-        try
-        {
-            Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
-            DatabaseQueries.GetAllCustomersEmail();
-            Console.WriteLine("View Customer Details functionality coming soon...");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error viewing customer details: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    private async Task AddCustomerAsync()
-    {
-        try
-        {
-            Console.WriteLine("\nEnter customer details (e.g., Name, Email, Phone):");
-            await _customerManager.AddCustomerAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error adding customer: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("\nPress any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    #endregion
-
-    #region Manage Accommodations
-
-    private void ManageAccommodationsAsync()
-    {
-        while (true)
-        {
-            string[] accommodationOptions = new[]
-            {
-                "Search Available Accommodations",
-                "Back to Main Menu"
-            };
-
-            DisplaySubMenu("Manage Accommodations", accommodationOptions);
-            string? input = Console.ReadLine();
-
-            switch (input)
-            {
-                case "1":
-                    SearchAvailableAccommodationsAsync();
-                    break;
-                case "2":
+                _console.WriteInfo("Enter Start Date (yyyy-mm-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
+                {
+                    _console.WriteError("Invalid Start Date.");
                     return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
-            }
-        }
-    }
+                }
 
-    private void SearchAvailableAccommodationsAsync()
-    {
-        try
-        {
-            Console.Write("Enter Start Date (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
-            {
-                Console.WriteLine("Invalid Start Date.");
-                return;
-            }
-
-            Console.Write("Enter End Date (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
-            {
-                Console.WriteLine("Invalid End Date.");
-                return;
-            }
-
-            if (endDate <= startDate)
-            {
-                Console.WriteLine("End date must be after start date.");
-                return;
-            }
-
-            Console.Write("Enter Location ID (or leave blank): ");
-            string? locationInput = Console.ReadLine();
-            int? locationId = null;
-            if (!string.IsNullOrWhiteSpace(locationInput) && int.TryParse(locationInput, out int locId))
-            {
-                locationId = locId;
-            }
-
-            Console.Write("Enter Minimum Price (or leave blank): ");
-            string? minPriceInput = Console.ReadLine();
-            decimal? minPrice = null;
-            if (!string.IsNullOrWhiteSpace(minPriceInput) && decimal.TryParse(minPriceInput, out decimal minPriceValue))
-            {
-                minPrice = minPriceValue;
-            }
-
-            Console.Write("Enter Maximum Price (or leave blank): ");
-            string? maxPriceInput = Console.ReadLine();
-            decimal? maxPrice = null;
-            if (!string.IsNullOrWhiteSpace(maxPriceInput) && decimal.TryParse(maxPriceInput, out decimal maxPriceValue))
-            {
-                maxPrice = maxPriceValue;
-            }
-
-            // Search for available accommodations
-            SearchAvailableAccommodationsAsync(startDate, endDate, locationId, minPrice, maxPrice);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error searching accommodations: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("\nPress any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    private void SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId, decimal? minPrice, decimal? maxPrice)
-    {
-        throw new NotImplementedException();
-    }
-
-    #endregion
-
-    #region Manage Miscellaneous
-
-    private async Task ManageMiscellaneousAsync()
-    {
-        while (true)
-        {
-            string[] miscOptions = new[]
-            {
-                "Run Synchronous Operation",
-                "Run Asynchronous Operation",
-                "Calc Test",
-                "Back to Main Menu"
-            };
-
-            DisplaySubMenu("Miscellaneous Operations", miscOptions);
-            string? inputMisc = Console.ReadLine();
-
-            switch (inputMisc)
-            {
-                case "1":
-                    await RunSynchronousOperationAsync();
-                    break;
-                case "2":
-                    await RunAsynchronousOperationAsync();
-                    break;
-                case "3":
-                    // Implement Calc test functionality when ready
-                    Console.WriteLine("Calc Test functionality coming soon...");
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey();
-                    break;
-                case "4":
+                _console.WriteInfo("Enter End Date (yyyy-mm-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+                {
+                    _console.WriteError("Invalid End Date.");
                     return;
-                default:
-                    Console.WriteLine("Invalid option. Press any key to try again.");
-                    Console.ReadKey();
-                    break;
+                }
+
+                _console.WriteInfo("Enter Number of Guests: ");
+                if (!int.TryParse(Console.ReadLine(), out int numberOfGuests))
+                {
+                    _console.WriteError("Invalid number of guests.");
+                    return;
+                }
+
+                // Add the new booking
+                await NewBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
             }
-        }
-    }
-
-    private async Task RunSynchronousOperationAsync()
-    {
-        try
-        {
-            Console.WriteLine("Starting synchronous operation...");
-            LongRunningOperation();
-
-            for (int i = 0; i < 10; i++)
+            catch (Exception ex)
             {
-                Console.WriteLine($"Main thread working... {i + 1}");
-                await Task.Delay(1000); // Simulate work asynchronously
+                _console.WriteError($"Error creating booking: {ex.Message}");
             }
-
-            Console.WriteLine("Finished synchronous operation.");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error during synchronous operation: {ex.Message}");
-        }
-        finally
-        {
-            Console.WriteLine("Press any key to return...");
-            Console.ReadKey();
-        }
-    }
-
-    private async Task RunAsynchronousOperationAsync()
-    {
-        try
-        {
-            Console.WriteLine("Starting asynchronous operation...");
-            Task longRunningTask = LongRunningOperationAsync();
-
-            Console.WriteLine("Doing other work while waiting...");
-
-            // Simulate other asynchronous work
-            for (int i = 0; i < 10; i++)
+            finally
             {
-                Console.WriteLine($"Main thread working... {i + 1}");
-                await Task.Delay(1000); // Simulate work asynchronously
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
             }
-
-            await longRunningTask;
-            Console.WriteLine("Finished asynchronous operation.");
         }
-        catch (Exception ex)
+
+        private async Task CancelBookingAsync()
         {
-            Console.WriteLine($"Error during asynchronous operation: {ex.Message}");
+            try
+            {
+                Console.Clear();
+                _console.WriteMenuTitle("------- Cancel Booking --------");
+                EditBooking.GetAllBookingsAsync();
+
+                _console.WriteInfo("Enter the ID of the booking you want to cancel: ");
+                if (int.TryParse(Console.ReadLine(), out int cancelId))
+                {
+                    CancelBooking.DeleteBooking(cancelId);
+                    _console.WriteSuccess("Booking cancelled successfully.");
+                }
+                else
+                {
+                    _console.WriteError("Invalid input. Please enter a valid number.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error cancelling booking: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
         }
-        finally
+
+        private async Task ChangeBookingAsync()
         {
-            Console.WriteLine("Press any key to return...");
-            Console.ReadKey();
+            while (true)
+            {
+                string[] editBookingOptions = new[]
+                {
+                    "Change the Date of Your Booking",
+                    "Change the Number of Guests",
+                    "Change Addons",
+                    "Exit"
+                };
+
+                DisplaySubMenu("Edit Bookings", editBookingOptions);
+                string? inputEdit = Console.ReadLine();
+
+                switch (inputEdit)
+                {
+                    case "1":
+                        await ChangeBookingDateAsync();
+                        break;
+                    case "2":
+                        await ChangeNumberOfGuestsAsync();
+                        break;
+                    case "3":
+                        await UpdateBookingExtrasAsync();
+                        break;
+
+                    case "4":
+                        _console.WriteSuccess("Exiting... Goodbye!");
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
         }
+
+        private async Task ChangeBookingDateAsync()
+        {
+            try
+            {
+                Console.Clear();
+                EditBooking.GetAllBookingsAsync();
+
+                _console.WriteInfo("Enter the Booking ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int bookingId))
+                {
+                    _console.WriteError("Invalid Booking ID.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter the New Start Date (yyyy-MM-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime newStartDate))
+                {
+                    _console.WriteError("Invalid Start Date.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter the New End Date (yyyy-MM-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime newEndDate))
+                {
+                    _console.WriteError("Invalid End Date.");
+                    return;
+                }
+
+                if (newEndDate <= newStartDate)
+                {
+                    _console.WriteError("End date must be after start date.");
+                    return;
+                }
+
+                await EditBooking.ChangeBookingDateAsync(bookingId, newStartDate, newEndDate);
+                _console.WriteSuccess("Booking date updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error changing booking date: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task ChangeNumberOfGuestsAsync()
+        {
+            try
+            {
+                Console.Clear();
+                DatabaseQueries.GetAllCustomers();
+                _console.WriteInfo("Please enter guest's details:");
+                await _customerManager.AddGuestAsync();
+                _console.WriteSuccess("Number of guests updated successfully!");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error changing number of guests: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        public async Task UpdateBookingExtrasAsync()
+        {
+            try
+            {
+                _console.WriteInfo("Enter the Booking ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int bookingId))
+                {
+                    _console.WriteError("Invalid Booking ID.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter the Extra Service ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int extraServiceId))
+                {
+                    _console.WriteError("Invalid Extra Service ID.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter the Quantity: ");
+                if (!int.TryParse(Console.ReadLine(), out int quantity))
+                {
+                    _console.WriteError("Invalid Quantity.");
+                    return;
+                }
+
+                // Correctly call the implemented method
+                await EditBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error changing extra addons: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task FilterPriceAsync()
+        {
+            while (true)
+            {
+                string[] filterPriceOptions = new[]
+                {
+                    "Sort accommodations by price ascending",
+                    "Sort accommodations by price descending",
+                    "Back to Manage Bookings"
+                };
+
+                DisplaySubMenu("Sort Accommodations by Price", filterPriceOptions);
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        await NewBooking.FilterPriceAscAsync();
+                        _console.WriteInfo("Press any key to go back to 'Manage Bookings'");
+                        Console.ReadKey();
+                        break;
+                    case "2":
+                        await NewBooking.FilterPriceDescAsync();
+                        _console.WriteInfo("Press any key to go back to 'Manage Bookings'");
+                        Console.ReadKey();
+                        break;
+                    case "3":
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        private async Task FilterReviewAsync()
+        {
+            try
+            {
+                Console.Clear();
+                await NewBooking.FilterReviewAsync();
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error filtering reviews: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task SortByDistanceToBeach()
+        {
+            try
+            {
+                Console.Clear();
+                await NewBooking.SortByDistanceToBeach();
+                _console.WriteInfo("Sort by beach completed.");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error sorting by distance to beach: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task AddGuestsToBookingAsync()
+        {
+            try
+            {
+                _console.WriteInfo("Please enter guest's details:");
+                await _customerManager.AddGuestAsync();
+                _console.WriteSuccess("Guests added successfully!");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error adding guests: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        #endregion
+
+        #region Manage Customers
+
+        private async Task ManageCustomersAsync()
+        {
+            while (true)
+            {
+                string[] customerOptions = new[]
+                {
+                    "View All Customers",
+                    "View Customer's Details",
+                    "Add Customer",
+                    "Back to Main Menu"
+                };
+
+                DisplaySubMenu("Manage Customers", customerOptions);
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        await ViewAllCustomersAsync();
+                        break;
+                    case "2":
+                        await ViewCustomerDetailsAsync();
+                        break;
+                    case "3":
+                        await AddCustomerAsync();
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        private async Task ViewAllCustomersAsync()
+        {
+            try
+            {
+                Console.Clear();
+                _console.WriteMenuTitle("------- All Customers --------");
+                DatabaseQueries.GetAllCustomers();
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error viewing customers: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("\nPress any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task ViewCustomerDetailsAsync()
+        {
+            try
+            {
+                _console.WriteInfo("Enter customer details (e.g., Name, Email, Phone):");
+                DatabaseQueries.GetAllCustomersEmail();
+                _console.WriteInfo("View Customer Details functionality coming soon...");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error viewing customer details: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task AddCustomerAsync()
+        {
+            try
+            {
+                _console.WriteInfo("Enter customer details (e.g., Name, Email, Phone):");
+                await _customerManager.AddCustomerAsync();
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error adding customer: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("\nPress any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        #endregion
+
+        #region Manage Accommodations
+
+        private void ManageAccommodationsAsync()
+        {
+            while (true)
+            {
+                string[] accommodationOptions = new[]
+                {
+                    "Search Available Accommodations",
+                    "Back to Main Menu"
+                };
+
+                DisplaySubMenu("Manage Accommodations", accommodationOptions);
+                string? input = Console.ReadLine();
+
+                switch (input)
+                {
+                    case "1":
+                        SearchAvailableAccommodationsAsync();
+                        break;
+                    case "2":
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        private void SearchAvailableAccommodationsAsync()
+        {
+            try
+            {
+                _console.WriteInfo("Enter Start Date (yyyy-mm-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
+                {
+                    _console.WriteError("Invalid Start Date.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter End Date (yyyy-mm-dd): ");
+                if (!DateTime.TryParse(Console.ReadLine(), out DateTime endDate))
+                {
+                    _console.WriteError("Invalid End Date.");
+                    return;
+                }
+
+                if (endDate <= startDate)
+                {
+                    _console.WriteError("End date must be after start date.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter Location ID (or leave blank): ");
+                string? locationInput = Console.ReadLine();
+                int? locationId = null;
+                if (!string.IsNullOrWhiteSpace(locationInput) && int.TryParse(locationInput, out int locId))
+                {
+                    locationId = locId;
+                }
+
+                _console.WriteInfo("Enter Minimum Price (or leave blank): ");
+                string? minPriceInput = Console.ReadLine();
+                decimal? minPrice = null;
+                if (!string.IsNullOrWhiteSpace(minPriceInput) && decimal.TryParse(minPriceInput, out decimal minPriceValue))
+                {
+                    minPrice = minPriceValue;
+                }
+
+                _console.WriteInfo("Enter Maximum Price (or leave blank): ");
+                string? maxPriceInput = Console.ReadLine();
+                decimal? maxPrice = null;
+                if (!string.IsNullOrWhiteSpace(maxPriceInput) && decimal.TryParse(maxPriceInput, out decimal maxPriceValue))
+                {
+                    maxPrice = maxPriceValue;
+                }
+
+                // Search for available accommodations
+                SearchAvailableAccommodationsAsync(startDate, endDate, locationId, minPrice, maxPrice);
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error searching accommodations: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("\nPress any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        private void SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId, decimal? minPrice, decimal? maxPrice)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region Manage Miscellaneous
+
+        private async Task ManageMiscellaneousAsync()
+        {
+            while (true)
+            {
+                string[] miscOptions = new[]
+                {
+                    "Run Synchronous Operation",
+                    "Run Asynchronous Operation",
+                    "Calc Test",
+                    "Back to Main Menu"
+                };
+
+                DisplaySubMenu("Miscellaneous Operations", miscOptions);
+                string? inputMisc = Console.ReadLine();
+
+                switch (inputMisc)
+                {
+                    case "1":
+                        await RunSynchronousOperationAsync();
+                        break;
+                    case "2":
+                        await RunAsynchronousOperationAsync();
+                        break;
+                    case "3":
+                        // Implement Calc test functionality when ready
+                        _console.WriteColoredLine("Calc Test functionality coming soon...", ConsoleColor.Cyan);
+                        _console.WriteInfo("Press any key to continue...");
+                        Console.ReadKey();
+                        break;
+                    case "4":
+                        return;
+                    default:
+                        _console.WriteError("Invalid option. Press any key to try again.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
+        private async Task RunSynchronousOperationAsync()
+        {
+            try
+            {
+                _console.WriteColoredLine("Starting synchronous operation...", ConsoleColor.Yellow);
+                LongRunningOperation();
+
+                for (int i = 0; i < 10; i++)
+                {
+                    _console.WriteInfo($"Main thread working... {i + 1}");
+                    await Task.Delay(1000); // Simulate work asynchronously
+                }
+
+                _console.WriteSuccess("Finished synchronous operation.");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error during synchronous operation: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        private async Task RunAsynchronousOperationAsync()
+        {
+            try
+            {
+                _console.WriteColoredLine("Starting asynchronous operation...", ConsoleColor.Yellow);
+                Task longRunningTask = LongRunningOperationAsync();
+
+                _console.WriteInfo("Doing other work while waiting...");
+
+                // Simulate other asynchronous work
+                for (int i = 0; i < 10; i++)
+                {
+                    _console.WriteInfo($"Main thread working... {i + 1}");
+                    await Task.Delay(1000); // Simulate work asynchronously
+                }
+
+                await longRunningTask;
+                _console.WriteSuccess("Finished asynchronous operation.");
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error during asynchronous operation: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
+            }
+        }
+
+        #endregion
+
+        #region Long-Running Operations
+
+        private void LongRunningOperation()
+        {
+            Thread.Sleep(5000); // Simulates a long operation
+            _console.WriteColoredLine("Long-running operation completed.", ConsoleColor.Green);
+        }
+
+        private async Task LongRunningOperationAsync()
+        {
+            await Task.Delay(5000); // Simulates a long operation asynchronously
+            _console.WriteColoredLine("Long-running operation completed.", ConsoleColor.Green);
+        }
+
+        #endregion
     }
-
-    #endregion
-
-    #region Long-Running Operations
-
-    private void LongRunningOperation()
-    {
-        Thread.Sleep(5000); // Simulates a long operation
-        Console.WriteLine("Long-running operation completed.");
-    }
-
-    private async Task LongRunningOperationAsync()
-    {
-        await Task.Delay(5000); // Simulates a long operation asynchronously
-        Console.WriteLine("Long-running operation completed.");
-    }
-
-    #endregion
 }
