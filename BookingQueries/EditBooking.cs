@@ -10,46 +10,42 @@ public class EditBooking
         _database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-/*    public static async Task ChangeBoardOptionAsync(int extraserviceid, int quantity, int bookingid)
+
+    #region Change Booking Options
+
+    public static async Task ChangeBookingOptionsAsync(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
-            await using var cmdBoardOption = _database.CreateCommand(
-                "UPDATE bookingextraservice " +
-                "SET extraserviceid = @ExtraServiceId, quantity = @Quantity " +
-                "WHERE bookingid = @BookingId");
+            string query = @"
+                UPDATE bookingextraservice
+                SET extraserviceid = @ExtraServiceId, quantity = @Quantity
+                WHERE bookingid = @BookingId;
+            ";
 
-            cmdBoardOption.Parameters.AddWithValue("@ExtraServiceId", extraserviceid);
-            cmdBoardOption.Parameters.AddWithValue("@Quantity", quantity);
-            cmdBoardOption.Parameters.AddWithValue("@BookingId", bookingid);
+            await using var cmd = _database.CreateCommand(query);
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+            cmd.Parameters.AddWithValue("@ExtraServiceId", extraServiceId);
+            cmd.Parameters.AddWithValue("@Quantity", quantity);
 
-            await cmdBoardOption.ExecuteNonQueryAsync();
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+            if (rowsAffected == 0)
+            {
+                throw new InvalidOperationException("No rows were updated. Check if the booking exists or the inputs are valid.");
+            }
+
+            Console.WriteLine("Booking options updated successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating board option: {ex.Message}");
+            Console.WriteLine($"Error updating booking options: {ex.Message}");
             throw;
         }
     }
-*/
-    /*public static async Task ChangeGuestsAsync(int id, int numberofguests)
-    {
-        try
-        {
-            await using var cmdGuests = _database.CreateCommand(
-                "UPDATE booking SET numberofguests = @numberofguests WHERE id = @Id");
 
-            cmdGuests.Parameters.AddWithValue("@numberofguests", numberofguests);
-            cmdGuests.Parameters.AddWithValue("@Id", id);
+    #endregion
 
-            await cmdGuests.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating guests: {ex.Message}");
-            throw;
-        }
-    }*/
 
     
     
@@ -59,17 +55,17 @@ public class EditBooking
         {
             await using var cmdInsert = _database?.CreateCommand(
                 "UPDATE booking " +
-                "SET startdate = @startdate, enddate = @enddate " +
-                "WHERE id = @Id AND NOT EXISTS ( " +
+                "SET startdate = $1 , enddate = $2 " +
+                "WHERE id = $3 AND NOT EXISTS ( " +
                 "    SELECT 1 FROM booking " +
-                "    WHERE accommodationid = (SELECT accommodationid FROM booking WHERE id = @id) " +
-                "    AND id != @Id " +
-                "    AND (startdate <= @EndDate AND enddate >= @StartDate)" +
+                "    WHERE accommodationid = (SELECT accommodationid FROM booking WHERE id = $3) " +
+                "    AND id != $3 " +
+                "    AND (startdate <= $2 AND enddate >= $1)" +
                 ");");
 
-            cmdInsert.Parameters.AddWithValue("@StartDate", startdate);
-            cmdInsert.Parameters.AddWithValue("@EndDate", enddate);
-            cmdInsert.Parameters.AddWithValue("@Id", id);
+            cmdInsert.Parameters.AddWithValue(startdate);
+            cmdInsert.Parameters.AddWithValue(enddate);
+            cmdInsert.Parameters.AddWithValue(id);
 
             var rowsAffected = await cmdInsert.ExecuteNonQueryAsync();
 
@@ -106,7 +102,7 @@ public class EditBooking
         }
     }
     
-    public static async void GetAllAddonsAsync()
+    public static async Task GetAllAddonsAsync()
     {
         await using var cmd = _database?.CreateCommand("SELECT bookingid, extraserviceid, quantity  FROM bookingextraservice;");
         await using var reader = await cmd?.ExecuteReaderAsync()!;
@@ -116,7 +112,7 @@ public class EditBooking
         {
             int bookingid = reader.GetInt32(0);
             int extraserviceid = reader.GetInt32(1);
-            int quantity = reader.GetInt32(3);
+            int quantity = reader.GetInt32(2);
 
             Console.WriteLine($"- Booking ID: {bookingid} - Extra service ID: {extraserviceid,10} - Quantity: {quantity}");
         }
@@ -128,7 +124,13 @@ public class EditBooking
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");
     }
     
+    public static void ChangeBoardOptionPlaceholder(int bookingId, int extraServiceId, int quantity)
+    {
+        throw new NotImplementedException("ChangeBoardOptionPlaceholder method is not implemented yet.");
+    }
     
-    
-
+    public static void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
+    {
+        throw new NotImplementedException();
+    }
 }
