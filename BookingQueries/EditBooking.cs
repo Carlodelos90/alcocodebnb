@@ -11,31 +11,37 @@ public class EditBooking
     }
 
 
-    public static async Task ChangeBoardOptions(int bookingId, int extraServiceId, int quantity)
+    public static async Task<int> ChangeBoardOptions(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
-            await using var cmdBoardOptions = _database.CreateCommand(
-                "UPDATE bookingextraservice" +
-                "SET extraserviceid = $1, quantity = $2" +
-                "WHERE bookingId = $3");
-            cmdBoardOptions.Parameters.AddWithValue(extraServiceId);
-            cmdBoardOptions.Parameters.AddWithValue(quantity);
-            cmdBoardOptions.Parameters.AddWithValue(bookingId);
+            string query = "UPDATE bookingextraservice " +
+                           "SET extraserviceid = $1, quantity = $2 " +
+                           "WHERE bookingid = $3";
+
+            await using var cmdBoardOptions = _database.CreateCommand(query);
+
+            cmdBoardOptions.Parameters.AddWithValue("$1", extraServiceId);
+            cmdBoardOptions.Parameters.AddWithValue("$2", quantity);
+            cmdBoardOptions.Parameters.AddWithValue("$3", bookingId);
 
             var rowsAffected = await cmdBoardOptions.ExecuteNonQueryAsync();
 
             if (rowsAffected == 0)
             {
-                throw new InvalidOperationException("The new booking dates overlap with an existing booking for the same accommodation or the booking does not exist.");
+                throw new InvalidOperationException(
+                    "No rows were updated. Check if the booking exists or the inputs are valid.");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating booking date: {ex.Message}");
+            Console.WriteLine($"Error updating booking options: {ex.Message}");
             throw;
         }
+
+        return bookingId;
     }
+
     
     
     public static async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
@@ -91,7 +97,7 @@ public class EditBooking
         }
     }
     
-    public static async void GetAllAddonsAsync()
+    public static async Task GetAllAddonsAsync()
     {
         await using var cmd = _database?.CreateCommand("SELECT bookingid, extraserviceid, quantity  FROM bookingextraservice;");
         await using var reader = await cmd?.ExecuteReaderAsync()!;
@@ -101,7 +107,7 @@ public class EditBooking
         {
             int bookingid = reader.GetInt32(0);
             int extraserviceid = reader.GetInt32(1);
-            int quantity = reader.GetInt32(3);
+            int quantity = reader.GetInt32(2);
 
             Console.WriteLine($"- Booking ID: {bookingid} - Extra service ID: {extraserviceid,10} - Quantity: {quantity}");
         }
@@ -114,7 +120,7 @@ public class EditBooking
     }
 
 
-    public static void ChangeBoardOptions()
+    public static void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
     {
         throw new NotImplementedException();
     }
