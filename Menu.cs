@@ -95,6 +95,8 @@ public class Menu
                 "Filter Price",
                 "Filter Review",
                 "Add Guests to the Booking",
+                "Sort by distance to beach",
+                "Sort by distance to center",
                 "Back to Main Menu"
             };
 
@@ -122,6 +124,17 @@ public class Menu
                     await AddGuestsToBookingAsync();
                     break;
                 case "7":
+                    //await SortByDistanceToBeach();
+                    Console.WriteLine("Sort by beach");
+                    Console.ReadLine();
+                    break;
+                case "8":
+                    //await SortByDistanceToCenter();
+                    Console.WriteLine("Sort by Center");
+                    Console.ReadLine();
+                    break;
+                
+                case "9":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to try again.");
