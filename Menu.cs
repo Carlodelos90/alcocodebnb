@@ -12,8 +12,7 @@ namespace alcocodebnb
         static readonly DatabaseConnection Db = new();
         CustomerManager _customerManager = new CustomerManager(Db.Connection());
         AccommodationManager _accommodationManager = new(Db.Connection());
-
-        // Instance of ApplicationConsole for color management
+        
         private readonly ApplicationConsole _console = new ApplicationConsole();
 
         public Menu()

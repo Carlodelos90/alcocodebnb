@@ -7,7 +7,6 @@ namespace alcocodebnb.BookingQueries;
 public class NewBooking
 {
     private static NpgsqlDataSource? _database;
-
     public NewBooking(NpgsqlDataSource database)
     {
         _database = database;
