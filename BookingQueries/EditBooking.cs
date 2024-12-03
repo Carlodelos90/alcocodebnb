@@ -112,8 +112,10 @@ public class EditBooking
     {
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");
     }
-    
-    
-    
 
+
+    public static void ChangeBoardOptions()
+    {
+        throw new NotImplementedException();
+    }
 }

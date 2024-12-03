@@ -272,6 +272,8 @@ public class Menu
                                 case "3":
                                     Console.Clear();
                                     EditBooking.GetAllAddonsAsync();
+
+                                    EditBooking.ChangeBoardOptions();
                                     Console.Write("Enter the booking ID: ");
                                     if (int.TryParse(Console.ReadLine(), out int extrabookingid))
                                     {
@@ -294,9 +296,7 @@ public class Menu
                                         Console.WriteLine("Invalid booking ID.");
                                     break;
 
-                                case "4":
-                                    Console.WriteLine("Exiting... Goodbye!");
-                                    return;
+                                
 
                                 default:
                                     Console.WriteLine("Invalid option. Press any key to try again.");
