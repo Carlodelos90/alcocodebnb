@@ -226,7 +226,7 @@ public class Menu
                             Console.Clear();
                             Console.WriteLine("------- Edit Bookings --------");
                             Console.WriteLine("\n1. Change the date of your booking" +
-                                              "\n2. Change the number of guests" +
+                                              "\n2. Add new guest to booking" +
                                               "\n3. Change extra addons" +
                                               "\n4. Exit");
                             Console.Write("\nChoose an option: ");
@@ -265,7 +265,7 @@ public class Menu
                                     Console.Clear();
                                     EditBooking.GetAllBookingsAsync();
                                     Console.WriteLine("Please enter guest's details");
-                                    await _customerManager.AddGuestAsync();
+                                    _customerManager.AddGuestAsync();
                                     
                                     break;
 
