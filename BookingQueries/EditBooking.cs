@@ -11,19 +11,19 @@ public class EditBooking
     }
 
 
-    public static async Task<int> ChangeBoardOptions(int bookingId, int extraServiceId, int quantity)
+    public static async Task<int> ChangeBoardOptionsAsync(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
             string query = "UPDATE bookingextraservice " +
-                           "SET extraserviceid = $1, quantity = $2 " +
-                           "WHERE bookingid = $3";
+                           "SET extraserviceid = $2, quantity = $3 " +
+                           "WHERE bookingid = $1";
 
             await using var cmdBoardOptions = _database.CreateCommand(query);
 
-            cmdBoardOptions.Parameters.AddWithValue("$1", extraServiceId);
-            cmdBoardOptions.Parameters.AddWithValue("$2", quantity);
-            cmdBoardOptions.Parameters.AddWithValue("$3", bookingId);
+            cmdBoardOptions.Parameters.AddWithValue("$1", bookingId);
+            cmdBoardOptions.Parameters.AddWithValue("$2", extraServiceId);
+            cmdBoardOptions.Parameters.AddWithValue("$3", quantity);
 
             var rowsAffected = await cmdBoardOptions.ExecuteNonQueryAsync();
 
@@ -120,7 +120,9 @@ public class EditBooking
     }
 
 
-    public static void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
+    
+
+    public static void ChangeBoardOptionsAsync()
     {
         throw new NotImplementedException();
     }

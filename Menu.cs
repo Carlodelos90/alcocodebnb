@@ -356,7 +356,6 @@ public class Menu
         {
             Console.Clear();
             await EditBooking.GetAllAddonsAsync();
-            
 
             Console.Write("Enter the Booking ID: ");
             if (!int.TryParse(Console.ReadLine(), out int bookingId))
@@ -379,7 +378,7 @@ public class Menu
                 return;
             }
             
-            EditBooking.ChangeBoardOption(bookingId,extraServiceId, quantity);
+            await EditBooking.ChangeBoardOptionsAsync(bookingId, extraServiceId, quantity);
             Console.WriteLine("Extra addons updated successfully!");
         }
         catch (Exception ex)
