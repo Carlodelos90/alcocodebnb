@@ -251,7 +251,7 @@ public class Menu
             {
                 "Change the Date of Your Booking",
                 "Change the Number of Guests",
-                "Change Extra Addons",
+                "Change Addons",
                 "Exit"
             };
 
@@ -267,8 +267,9 @@ public class Menu
                     await ChangeNumberOfGuestsAsync();
                     break;
                 case "3":
-                    await ChangeExtraAddonsAsync();
+                    await UpdateBookingExtrasAsync();
                     break;
+                
                 case "4":
                     Console.WriteLine("Exiting... Goodbye!");
                     return;
@@ -350,13 +351,10 @@ public class Menu
         }
     }
 
-    private async Task ChangeExtraAddonsAsync()
+    public async Task UpdateBookingExtrasAsync()
     {
         try
         {
-            Console.Clear();
-            await EditBooking.GetAllAddonsAsync();
-
             Console.Write("Enter the Booking ID: ");
             if (!int.TryParse(Console.ReadLine(), out int bookingId))
             {
@@ -377,9 +375,9 @@ public class Menu
                 Console.WriteLine("Invalid Quantity.");
                 return;
             }
-            
-            await EditBooking.ChangeBoardOptionsAsync(bookingId, extraServiceId, quantity);
-            Console.WriteLine("Extra addons updated successfully!");
+
+            // Correctly call the implemented method
+            await EditBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
         }
         catch (Exception ex)
         {

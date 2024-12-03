@@ -11,36 +11,41 @@ public class EditBooking
     }
 
 
-    public static async Task<int> ChangeBoardOptionsAsync(int bookingId, int extraServiceId, int quantity)
+    #region Change Booking Options
+
+    public static async Task ChangeBookingOptionsAsync(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
-            string query = "UPDATE bookingextraservice " +
-                           "SET extraserviceid = $2, quantity = $3 " +
-                           "WHERE bookingid = $1";
+            string query = @"
+                UPDATE bookingextraservice
+                SET extraserviceid = @ExtraServiceId, quantity = @Quantity
+                WHERE bookingid = @BookingId;
+            ";
 
-            await using var cmdBoardOptions = _database.CreateCommand(query);
+            await using var cmd = _database.CreateCommand(query);
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+            cmd.Parameters.AddWithValue("@ExtraServiceId", extraServiceId);
+            cmd.Parameters.AddWithValue("@Quantity", quantity);
 
-            cmdBoardOptions.Parameters.AddWithValue("$1", bookingId);
-            cmdBoardOptions.Parameters.AddWithValue("$2", extraServiceId);
-            cmdBoardOptions.Parameters.AddWithValue("$3", quantity);
-
-            var rowsAffected = await cmdBoardOptions.ExecuteNonQueryAsync();
+            int rowsAffected = await cmd.ExecuteNonQueryAsync();
 
             if (rowsAffected == 0)
             {
-                throw new InvalidOperationException(
-                    "No rows were updated. Check if the booking exists or the inputs are valid.");
+                throw new InvalidOperationException("No rows were updated. Check if the booking exists or the inputs are valid.");
             }
+
+            Console.WriteLine("Booking options updated successfully.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error updating booking options: {ex.Message}");
             throw;
         }
-
-        return bookingId;
     }
+
+    #endregion
+
 
     
     
@@ -118,11 +123,13 @@ public class EditBooking
     {
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");
     }
-
-
     
-
-    public static void ChangeBoardOptionsAsync()
+    public static void ChangeBoardOptionPlaceholder(int bookingId, int extraServiceId, int quantity)
+    {
+        throw new NotImplementedException("ChangeBoardOptionPlaceholder method is not implemented yet.");
+    }
+    
+    public static void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
     {
         throw new NotImplementedException();
     }
