@@ -2,6 +2,7 @@ using alcocodebnb.BookingQueries;
 using alcocodebnb.CustomerQueries;
 using alcocodebnb.AccommodationQueries;
 
+
 namespace alcocodebnb;
 
 public class Menu
@@ -18,6 +19,7 @@ public class Menu
         CustomerManager customer = new CustomerManager(Db.Connection());
         AccommodationManager accommodationManager = new(Db.Connection());
         EditBooking editBooking = new(Db.Connection());
+        
     }
 
     #region Start method of the menu
@@ -124,13 +126,12 @@ public class Menu
                     await AddGuestsToBookingAsync();
                     break;
                 case "7":
-                    //await SortByDistanceToBeach();
+                    await SortByDistanceToBeach();
                     Console.WriteLine("Sort by beach");
                     Console.ReadLine();
                     break;
                 case "8":
-                    //await SortByDistanceToCenter();
-                    Console.WriteLine("Sort by Center");
+                    await NewBooking.SortByDistanceToCenterAsync();
                     Console.ReadLine();
                     break;
                 
@@ -433,7 +434,6 @@ public class Menu
         {
             Console.Clear();
             NewBooking.FilterReviewAsync();
-            Console.WriteLine("Filter Review functionality coming soon...");
         }
         catch (Exception ex)
         {
@@ -446,6 +446,37 @@ public class Menu
         }
     }
 
+    
+    
+    private async Task SortByDistanceToBeach()
+    {
+        try
+        {
+            Console.Clear();
+            NewBooking.SortByDistanceToBeach();
+            Console.WriteLine("Sort distance beach functionality coming soon...");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error filtering distance to beach: {ex.Message}");
+        }
+        finally
+        {
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private async Task AddGuestsToBookingAsync()
     {
         try
