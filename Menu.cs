@@ -433,7 +433,6 @@ public class Menu
         {
             Console.Clear();
             NewBooking.FilterReviewAsync();
-            Console.WriteLine("Filter Review functionality coming soon...");
         }
         catch (Exception ex)
         {
