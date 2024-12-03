@@ -612,7 +612,7 @@ namespace alcocodebnb
             }
         }
 
-        private void SearchAvailableAccommodationsAsync()
+        private async Task SearchAvailableAccommodationsAsync()
         {
             try
             {
@@ -673,7 +673,6 @@ namespace alcocodebnb
                 Console.ReadKey();
             }
         }
-
         private void SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId, decimal? minPrice, decimal? maxPrice)
         {
             throw new NotImplementedException();

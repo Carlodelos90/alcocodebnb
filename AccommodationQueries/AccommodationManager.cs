@@ -14,7 +14,7 @@ public class AccommodationManager
     }
 
     #region Search Available Accommodations
-    public async Task SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId = null, decimal? minPrice = null, decimal? maxPrice = null)
+    private async Task SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId = null, decimal? minPrice = null, decimal? maxPrice = null)
     {
         if (endDate <= startDate)
         {
