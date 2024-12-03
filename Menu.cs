@@ -20,6 +20,7 @@ public class Menu
         EditBooking editBooking = new(Db.Connection());
     }
 
+    #region Start method of the menu
     public async Task Start()
     {
         while (true)
@@ -51,7 +52,8 @@ public class Menu
             }
         }
     }
-
+#endregion
+    
     #region Menu Display Methods
 
     private void DisplayMainMenu()
