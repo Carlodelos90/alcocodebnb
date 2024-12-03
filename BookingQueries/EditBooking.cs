@@ -88,6 +88,11 @@ public class EditBooking
         await using var reader = await cmd?.ExecuteReaderAsync()!;
 
         Console.WriteLine("Bookings List:");
+        Console.WriteLine(
+            "---------------------------------------------------------------------------------------------------------");
+        Console.WriteLine($"{"ID",-5} {"Customer ID",-15} {"Accommodation ID:",-12} - {"Startdate",-20} - {"Enddate",30} - {"total price",10} - {"Number of guests"}");
+        Console.WriteLine(
+            "---------------------------------------------------------------------------------------------------------");
         while (reader.Read())
         {
             int id = reader.GetInt32(0);
@@ -98,7 +103,7 @@ public class EditBooking
             double totalprice = reader.GetDouble(5);
             int numberofguests = reader.GetInt32(6);
 
-            Console.WriteLine($"- ID: {id} - Customer ID: {customerid,10} - Accommodation ID: {accommodationid} - Startdate: {startdate,10} - Enddate: {enddate,10} - Total price:  {totalprice, 10} - Number of guests: {numberofguests}");
+            Console.WriteLine($"- {id,-5} - {customerid,-15} - {accommodationid, -12} - {startdate,-20} - {enddate,30} - {totalprice, 10} - {numberofguests}");
         }
     }
     
