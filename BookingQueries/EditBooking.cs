@@ -10,47 +10,32 @@ public class EditBooking
         _database = database ?? throw new ArgumentNullException(nameof(database));
     }
 
-/*    public static async Task ChangeBoardOptionAsync(int extraserviceid, int quantity, int bookingid)
+
+    public static async Task ChangeBoardOptions(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
-            await using var cmdBoardOption = _database.CreateCommand(
-                "UPDATE bookingextraservice " +
-                "SET extraserviceid = @ExtraServiceId, quantity = @Quantity " +
-                "WHERE bookingid = @BookingId");
+            await using var cmdBoardOptions = _database.CreateCommand(
+                "UPDATE bookingextraservice" +
+                "SET extraserviceid = $1, quantity = $2" +
+                "WHERE bookingId = $3");
+            cmdBoardOptions.Parameters.AddWithValue(extraServiceId);
+            cmdBoardOptions.Parameters.AddWithValue(quantity);
+            cmdBoardOptions.Parameters.AddWithValue(bookingId);
 
-            cmdBoardOption.Parameters.AddWithValue("@ExtraServiceId", extraserviceid);
-            cmdBoardOption.Parameters.AddWithValue("@Quantity", quantity);
-            cmdBoardOption.Parameters.AddWithValue("@BookingId", bookingid);
+            var rowsAffected = await cmdBoardOptions.ExecuteNonQueryAsync();
 
-            await cmdBoardOption.ExecuteNonQueryAsync();
+            if (rowsAffected == 0)
+            {
+                throw new InvalidOperationException("The new booking dates overlap with an existing booking for the same accommodation or the booking does not exist.");
+            }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error updating board option: {ex.Message}");
+            Console.WriteLine($"Error updating booking date: {ex.Message}");
             throw;
         }
     }
-*/
-    /*public static async Task ChangeGuestsAsync(int id, int numberofguests)
-    {
-        try
-        {
-            await using var cmdGuests = _database.CreateCommand(
-                "UPDATE booking SET numberofguests = @numberofguests WHERE id = @Id");
-
-            cmdGuests.Parameters.AddWithValue("@numberofguests", numberofguests);
-            cmdGuests.Parameters.AddWithValue("@Id", id);
-
-            await cmdGuests.ExecuteNonQueryAsync();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error updating guests: {ex.Message}");
-            throw;
-        }
-    }*/
-
     
     
     public static async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
@@ -59,17 +44,17 @@ public class EditBooking
         {
             await using var cmdInsert = _database.CreateCommand(
                 "UPDATE booking " +
-                "SET startdate = @startdate, enddate = @enddate " +
-                "WHERE id = @Id AND NOT EXISTS ( " +
+                "SET startdate = $1 , enddate = $2 " +
+                "WHERE id = $3 AND NOT EXISTS ( " +
                 "    SELECT 1 FROM booking " +
-                "    WHERE accommodationid = (SELECT accommodationid FROM booking WHERE id = @id) " +
-                "    AND id != @Id " +
-                "    AND (startdate <= @EndDate AND enddate >= @StartDate)" +
+                "    WHERE accommodationid = (SELECT accommodationid FROM booking WHERE id = $3) " +
+                "    AND id != $3 " +
+                "    AND (startdate <= $2 AND enddate >= $1)" +
                 ");");
 
-            cmdInsert.Parameters.AddWithValue("@StartDate", startdate);
-            cmdInsert.Parameters.AddWithValue("@EndDate", enddate);
-            cmdInsert.Parameters.AddWithValue("@Id", id);
+            cmdInsert.Parameters.AddWithValue(startdate);
+            cmdInsert.Parameters.AddWithValue(enddate);
+            cmdInsert.Parameters.AddWithValue(id);
 
             var rowsAffected = await cmdInsert.ExecuteNonQueryAsync();
 
