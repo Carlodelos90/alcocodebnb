@@ -2,6 +2,7 @@ using alcocodebnb.BookingQueries;
 using alcocodebnb.CustomerQueries;
 using alcocodebnb.AccommodationQueries;
 
+
 namespace alcocodebnb;
 
 public class Menu
@@ -18,6 +19,7 @@ public class Menu
         CustomerManager customer = new CustomerManager(Db.Connection());
         AccommodationManager accommodationManager = new(Db.Connection());
         EditBooking editBooking = new(Db.Connection());
+        
     }
 
     #region Start method of the menu
@@ -129,8 +131,7 @@ public class Menu
                     Console.ReadLine();
                     break;
                 case "8":
-                    //await SortByDistanceToCenter();
-                    Console.WriteLine("Sort by Center");
+                    await NewBooking.SortByDistanceToCenterAsync();
                     Console.ReadLine();
                     break;
                 
