@@ -37,3 +37,7 @@
 ### if board options
     
     Add or remove full/halfboard
+
+####To fix
+Add/change number of guest
+Implement Automatic "nummberofguest" function

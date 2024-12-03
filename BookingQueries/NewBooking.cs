@@ -437,8 +437,8 @@ public class NewBooking
                 Console.WriteLine(
                     $"{id,-5} " +
                     $"{name,-50} " +
-                    $"{basePrice,10:C}" +
-                    $"{distanceToCenter,10:C}");
+                    $"{basePrice,10}$" +
+                    $"{distanceToCenter,10}");
             }
 
             Console.WriteLine(

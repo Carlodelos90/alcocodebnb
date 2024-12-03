@@ -4,9 +4,9 @@ namespace alcocodebnb;
 public class DatabaseConnection
 {
     private readonly string _host = "localhost";
-    private readonly string _port = "5433";
+    private readonly string _port = "5432";
     private readonly string _username = "postgres";
-    private readonly string _password = "ostmacka666";
+    private readonly string _password = "ostmackasadfjsadjkfhasdfsdfilasuhdflasjkdhfa666";
     private readonly string _database = "postgres";
     private readonly NpgsqlDataSource _connection;
     public NpgsqlDataSource Connection()
