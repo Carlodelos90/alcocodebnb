@@ -399,17 +399,59 @@ public class NewBooking
     }
     
     
+    #region SortByDistanceToCenter
+
+    public static async Task SortByDistanceToCenterAsync()
+    {
+        if (_database == null)
+        {
+            Console.WriteLine("Database connection is not initialized.");
+            return;
+        }
+
+        string query = @"
+            SELECT id, name, distancetobeach, distancetocenter, baseprice, rating, pool, eveningentertainment, kidsclub, restaurant 
+            FROM accommodation 
+            ORDER BY distancetocenter ASC;
+        ";
+
+        try
+        {
+            await using var cmd = _database.CreateCommand(query);
+            await using var reader = await cmd.ExecuteReaderAsync();
+
+            Console.WriteLine("\nAccommodations Sorted by distance to center (Ascending):");
+            Console.WriteLine(
+                "---------------------------------------------------------------------------------------------------------");
+            Console.WriteLine($"{"ID",-5} {"Name",-50} {"Price",-12} {"DistanceToCenter",-12}");
+            Console.WriteLine(
+                "---------------------------------------------------------------------------------------------------------");
+
+            while (await reader.ReadAsync())
+            {
+                int id = reader.GetInt32(0);
+                string name = reader.GetString(1);
+                decimal basePrice = reader.GetDecimal(2);
+                decimal distanceToCenter = reader.GetDecimal(3);
+
+                Console.WriteLine(
+                    $"{id,-5} " +
+                    $"{name,-50} " +
+                    $"{basePrice,10:C}" +
+                    $"{distanceToCenter,10:C}");
+            }
+
+            Console.WriteLine(
+                "---------------------------------------------------------------------------------------------------------");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error sorting accommodations by distance to center ascending: {ex.Message}");
+        }
+    }
+    #endregion
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    #region SortByDistanceToBeach
     
     public static async Task SortByDistanceToBeach()
     {
@@ -450,6 +492,7 @@ public class NewBooking
             Console.WriteLine($"Error filtering distance to beach: {ex.Message}");
         }
     }
+    #endregion
     
     
     
