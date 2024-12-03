@@ -39,5 +39,6 @@
     Add or remove full/halfboard
 
 ####To fix
-Add/change number of guest
-Implement Automatic "nummberofguest" function
+Add/change number of guest (DONE)
+Implement Automatic "nummberofguest" function (DONE)
+Change color

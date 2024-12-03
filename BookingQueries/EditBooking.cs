@@ -90,7 +90,7 @@ public class EditBooking
         Console.WriteLine("Bookings List:");
         Console.WriteLine(
             "---------------------------------------------------------------------------------------------------------");
-        Console.WriteLine($"{"ID",-5} {"Customer ID",-15} {"Accommodation ID:",-12} - {"Startdate",-20} - {"Enddate",30} - {"total price",10} - {"Number of guests"}");
+        Console.WriteLine($"{"ID",-5} {"Customer ID",-15} {"Accommodation ID:",-12} - {"Startdate",-20} - {"Enddate",25} - {"total price",10} - {"Number of guests"}");
         Console.WriteLine(
             "---------------------------------------------------------------------------------------------------------");
         while (reader.Read())
@@ -103,7 +103,7 @@ public class EditBooking
             double totalprice = reader.GetDouble(5);
             int numberofguests = reader.GetInt32(6);
 
-            Console.WriteLine($"- {id,-5} - {customerid,-15} - {accommodationid, -12} - {startdate,-20} - {enddate,30} - {totalprice, 10} - {numberofguests}");
+            Console.WriteLine($"- {id,-5} - {customerid,-15} - {accommodationid, -12} - {startdate,-20} - {enddate,25} - {totalprice, 10} - {numberofguests}");
         }
     }
     

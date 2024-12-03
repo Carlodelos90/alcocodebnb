@@ -336,7 +336,7 @@ public class Menu
         try
         {
             Console.Clear();
-            EditBooking.GetAllBookingsAsync();
+            DatabaseQueries.GetAllCustomers();
             Console.WriteLine("Please enter guest's details:");
             await _customerManager.AddGuestAsync();
             Console.WriteLine("Number of guests updated successfully!");
