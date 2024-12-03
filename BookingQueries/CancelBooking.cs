@@ -16,7 +16,7 @@ namespace alcocodebnb.BookingQueries
         {
             await using var cmd = _database?.CreateCommand("SELECT id FROM booking");
             await using var reader = await cmd?.ExecuteReaderAsync()!;
-            while ( await reader.ReadAsync()) // Läser av 1 rad/objekt i taget ifrån resultatet och kommer avsluta loopen när det inte finns fler rader att läsa. 
+            while ( await reader.ReadAsync())
             {
                 Console.WriteLine($"Id: {reader.GetInt32(0)}");
                                  

@@ -64,8 +64,8 @@ public class CustomerManager
             cmd.Parameters.AddWithValue(email);
             cmd.Parameters.AddWithValue(phoneNumber);
             cmd.Parameters.AddWithValue(dateOfBirth);
-
-            // Execute the command and get the new customer ID
+            
+            //Gets the new ID
             int newCustomerId = (int)(await cmd.ExecuteScalarAsync())!;
 
             Console.WriteLine("\nCustomer ID: " + newCustomerId);
@@ -151,8 +151,7 @@ public class CustomerManager
             cmd.Parameters.AddWithValue(phoneNumber);
             cmd.Parameters.AddWithValue(dateOfBirth);
             cmd.Parameters.AddWithValue(bookingId);
-
-            // Execute the command and get the new guest ID
+            
             int newGuestId = (int)(await cmd.ExecuteScalarAsync())!;
 
             Console.WriteLine("\nGuest ID: " + newGuestId);

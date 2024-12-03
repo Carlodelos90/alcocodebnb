@@ -14,17 +14,5 @@ namespace alcocodebnb.ConsoleUtilities
         {
             Console.WriteLine(message);
         }
-
-        protected void WriteWithColor(string message, ConsoleColor color)
-        {
-            Console.ForegroundColor = color;
-            Console.Write(message);
-            Console.ResetColor();
-        }
-
-        protected void Write(string message)
-        {
-            Console.Write(message);
-        }
     }
 }
