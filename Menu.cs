@@ -14,6 +14,7 @@ namespace alcocodebnb
         AccommodationManager _accommodationManager = new(Db.Connection());
         private readonly DatabaseQueries _queries; // New Instance Field
         private readonly ApplicationConsole _console = new ApplicationConsole();
+        static DatabaseConnection db = new();
 
         public Menu()
         {
@@ -585,7 +586,7 @@ namespace alcocodebnb
 
         #region Manage Accommodations
 
-        private void ManageAccommodationsAsync()
+        private async Task ManageAccommodationsAsync()
         {
             while (true)
             {
@@ -601,7 +602,7 @@ namespace alcocodebnb
                 switch (input)
                 {
                     case "1":
-                        SearchAvailableAccommodationsAsync();
+                        await HandleSearchAvailableAccommodationsAsync();
                         break;
                     case "2":
                         return;
@@ -613,7 +614,7 @@ namespace alcocodebnb
             }
         }
 
-        private async Task SearchAvailableAccommodationsAsync()
+        private async Task HandleSearchAvailableAccommodationsAsync()
         {
             try
             {
@@ -661,8 +662,8 @@ namespace alcocodebnb
                     maxPrice = maxPriceValue;
                 }
 
-                // Search for available accommodations
-                SearchAvailableAccommodationsAsync(startDate, endDate, locationId, minPrice, maxPrice);
+                // Call the method from AccommodationManager
+                await _accommodationManager.SearchAvailableAccommodationsAsync(startDate, endDate, locationId, minPrice, maxPrice);
             }
             catch (Exception ex)
             {
@@ -673,10 +674,6 @@ namespace alcocodebnb
                 _console.WriteInfo("\nPress any key to return...");
                 Console.ReadKey();
             }
-        }
-        private void SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId, decimal? minPrice, decimal? maxPrice)
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
