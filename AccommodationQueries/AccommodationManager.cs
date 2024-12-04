@@ -1,6 +1,6 @@
 #region Using Directives
 using Npgsql;
-using NpgsqlTypes; // Ensure this using directive is present
+using NpgsqlTypes;
 #endregion
 
 namespace alcocodebnb.AccommodationQueries
