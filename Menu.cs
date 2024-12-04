@@ -618,6 +618,7 @@ namespace alcocodebnb
         {
             try
             {
+                // Collecting existing search criteria
                 _console.WriteInfo("Enter Start Date (yyyy-mm-dd): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
                 {
@@ -662,8 +663,24 @@ namespace alcocodebnb
                     maxPrice = maxPriceValue;
                 }
 
-                // Call the method from AccommodationManager
-                await _accommodationManager.SearchAvailableAccommodationsAsync(startDate, endDate, locationId, minPrice, maxPrice);
+                // Collecting new search criteria
+                bool? pool = PromptYesNo("Do you require a Pool? (yes/no or leave blank for any): ");
+                bool? eveningEntertainment = PromptYesNo("Do you require Evening Entertainment? (yes/no or leave blank for any): ");
+                bool? kidsClub = PromptYesNo("Do you require a Kids Club? (yes/no or leave blank for any): ");
+                bool? restaurant = PromptYesNo("Do you require a Restaurant? (yes/no or leave blank for any): ");
+
+                // Call the method from AccommodationManager with new parameters
+                await _accommodationManager.SearchAvailableAccommodationsAsync(
+                    startDate,
+                    endDate,
+                    locationId,
+                    minPrice,
+                    maxPrice,
+                    pool,
+                    eveningEntertainment,
+                    kidsClub,
+                    restaurant
+                );
             }
             catch (Exception ex)
             {
@@ -674,6 +691,23 @@ namespace alcocodebnb
                 _console.WriteInfo("\nPress any key to return...");
                 Console.ReadKey();
             }
+        }
+
+        /// <summary>
+        /// Helper method to prompt the user for a yes/no question.
+        /// Returns true for "yes", false for "no", and null if left blank.
+        /// </summary>
+        private bool? PromptYesNo(string message)
+        {
+            _console.WriteInfo(message);
+            string? input = Console.ReadLine()?.Trim().ToLower();
+
+            if (input == "yes" || input == "y")
+                return true;
+            else if (input == "no" || input == "n")
+                return false;
+            else
+                return null; // Any for no preference
         }
 
         #endregion
