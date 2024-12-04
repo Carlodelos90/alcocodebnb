@@ -41,4 +41,11 @@
 ####To fix
 Add/change number of guest (DONE)
 Implement Automatic "nummberofguest" function (DONE)
-Change color
+Change color (DONE)
+
+
+# To fix 5th Dec
+
+## Research on filter implementaion
+## Extra addons
+## Why we used "static" methods

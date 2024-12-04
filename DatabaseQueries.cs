@@ -1,20 +1,20 @@
 using Npgsql;
 
-namespace alcocodebnb;
-
+namespace alcocodebnb
+{
     public class DatabaseQueries
     {
-        private static NpgsqlDataSource? _database;
+        private NpgsqlDataSource? _database;
 
         public DatabaseQueries(NpgsqlDataSource database)
         {
             _database = database;
         }
 
-        public static async void GetAllCustomers()
+        public async Task GetAllCustomers()
         {
             await using var cmd = _database?.CreateCommand("SELECT firstname, lastname FROM customer;");
-            await using var reader = await cmd?.ExecuteReaderAsync()!; //The  "!" suppresses the nullable warning
+            await using var reader = await cmd?.ExecuteReaderAsync()!; // The "!" suppresses the nullable warning
 
             Console.WriteLine("Customers List:");
             while (reader.Read())
@@ -27,10 +27,10 @@ namespace alcocodebnb;
                 Console.ResetColor();
             }
         }
-    
-        public static async void GetAllCustomersEmail()
+
+        public async Task GetAllCustomersEmail()
         {
-            await using var cmd = _database?.CreateCommand("SELECT id, firstname, lastname, email, phonenumber  FROM customer;");
+            await using var cmd = _database?.CreateCommand("SELECT id, firstname, lastname, email, phonenumber FROM customer;");
             await using var reader = await cmd?.ExecuteReaderAsync()!;
 
             Console.WriteLine("Customers List:");
@@ -42,7 +42,8 @@ namespace alcocodebnb;
                 string email = reader.GetString(3);
                 string phonenumber = reader.GetString(4);
                 
-                Console.WriteLine($"- ID: {id} - {firstName,10} {lastName}'s is: {email,40} an the PHONE: {phonenumber,40}");
+                Console.WriteLine($"- ID: {id} - {firstName,10} {lastName}'s Email: {email,30} | Phone: {phonenumber,15}");
             }
         }
     }
+}

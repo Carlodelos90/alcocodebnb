@@ -12,7 +12,7 @@ namespace alcocodebnb
         static readonly DatabaseConnection Db = new();
         CustomerManager _customerManager = new CustomerManager(Db.Connection());
         AccommodationManager _accommodationManager = new(Db.Connection());
-        
+        private readonly DatabaseQueries _queries; // New Instance Field
         private readonly ApplicationConsole _console = new ApplicationConsole();
 
         public Menu()
@@ -23,6 +23,7 @@ namespace alcocodebnb
             CustomerManager customer = new CustomerManager(Db.Connection());
             AccommodationManager accommodationManager = new(Db.Connection());
             EditBooking editBooking = new(Db.Connection());
+            _queries = new DatabaseQueries(Db.Connection());
         }
 
         #region Start method of the menu
@@ -337,7 +338,7 @@ namespace alcocodebnb
             try
             {
                 Console.Clear();
-                DatabaseQueries.GetAllCustomers();
+                await _queries.GetAllCustomers();
                 _console.WriteInfo("Please enter guest's details:");
                 await _customerManager.AddGuestAsync();
                 _console.WriteSuccess("Number of guests updated successfully!");
@@ -352,7 +353,7 @@ namespace alcocodebnb
                 Console.ReadKey();
             }
         }
-
+        
         public async Task UpdateBookingExtrasAsync()
         {
             try
@@ -530,7 +531,7 @@ namespace alcocodebnb
             {
                 Console.Clear();
                 _console.WriteMenuTitle("------- All Customers --------");
-                DatabaseQueries.GetAllCustomers();
+                await _queries.GetAllCustomers();
             }
             catch (Exception ex)
             {
@@ -548,7 +549,7 @@ namespace alcocodebnb
             try
             {
                 _console.WriteInfo("Enter customer details (e.g., Name, Email, Phone):");
-                DatabaseQueries.GetAllCustomersEmail();
+                await _queries.GetAllCustomersEmail();
                 _console.WriteInfo("View Customer Details functionality coming soon...");
             }
             catch (Exception ex)
