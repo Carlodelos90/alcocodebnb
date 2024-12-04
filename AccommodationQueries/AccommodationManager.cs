@@ -16,7 +16,6 @@ public class AccommodationManager
     #region Search Available Accommodations
     public async Task SearchAvailableAccommodationsAsync(DateTime startDate, DateTime endDate, int? locationId = null, decimal? minPrice = null, decimal? maxPrice = null)
     {
-            // Validate dates
             if (endDate <= startDate)
             {
                 Console.WriteLine("End date must be after start date.");
@@ -27,12 +26,10 @@ public class AccommodationManager
                 SELECT a.id, a.name, a.baseprice, a.rating, a.pool, a.eveningentertainment, a.kidsclub, a.restaurant
                 FROM accommodation a
                 WHERE
-                    -- Search criteria filters
                     (@LocationId IS NULL OR a.location = @LocationId) AND
                     (@MinPrice IS NULL OR a.baseprice >= @MinPrice) AND
                     (@MaxPrice IS NULL OR a.baseprice <= @MaxPrice) AND
 
-                    -- Exclude accommodations with overlapping bookings
                     a.id NOT IN (
                         SELECT b.accommodationid
                         FROM booking b
@@ -43,8 +40,7 @@ public class AccommodationManager
             try
             {
                 await using var cmd = _database.CreateCommand(query);
-
-                // Add parameters
+                
                 cmd.Parameters.Add("StartDate", NpgsqlTypes.NpgsqlDbType.Date).Value = startDate;
                 cmd.Parameters.Add("EndDate", NpgsqlTypes.NpgsqlDbType.Date).Value = endDate;
                 cmd.Parameters.Add("LocationId", NpgsqlTypes.NpgsqlDbType.Integer).Value = locationId.HasValue ? (object)locationId.Value : DBNull.Value;
@@ -86,6 +82,6 @@ public class AccommodationManager
             {
                 Console.WriteLine($"Error searching accommodations: {ex.Message}");
             }
-        }
+    }
     #endregion
 }
