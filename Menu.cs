@@ -12,7 +12,7 @@ namespace alcocodebnb
         static readonly DatabaseConnection Db = new();
         CustomerManager _customerManager = new CustomerManager(Db.Connection());
         AccommodationManager _accommodationManager = new(Db.Connection());
-        private readonly DatabaseQueries _queries; // New Instance Field
+        private readonly DatabaseQueries _queries;
         private readonly ApplicationConsole _console = new ApplicationConsole();
         static DatabaseConnection db = new();
 
@@ -155,8 +155,7 @@ namespace alcocodebnb
             {
                 Console.Clear();
                 _console.WriteMenuTitle("------- New Booking --------");
-
-                // Display all locations
+                
                 await NewBooking.AllLocationsAsync();
 
                 _console.WriteInfo("Enter Location ID: ");
@@ -165,8 +164,7 @@ namespace alcocodebnb
                     _console.WriteError("Invalid Location ID.");
                     return;
                 }
-
-                // Show accommodations based on location
+                
                 await NewBooking.ShowAccommodationsAsync(locationId);
 
                 _console.WriteInfo("Enter Accommodation ID: ");
@@ -203,8 +201,7 @@ namespace alcocodebnb
                     _console.WriteError("Invalid number of guests.");
                     return;
                 }
-
-                // Add the new booking
+                
                 await NewBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
             }
             catch (Exception ex)
@@ -379,8 +376,6 @@ namespace alcocodebnb
                     _console.WriteError("Invalid Quantity.");
                     return;
                 }
-
-                // Correctly call the implemented method
                 await EditBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
             }
             catch (Exception ex)
@@ -618,7 +613,6 @@ namespace alcocodebnb
         {
             try
             {
-                // Collecting existing search criteria
                 _console.WriteInfo("Enter Start Date (yyyy-mm-dd): ");
                 if (!DateTime.TryParse(Console.ReadLine(), out DateTime startDate))
                 {
@@ -662,14 +656,11 @@ namespace alcocodebnb
                 {
                     maxPrice = maxPriceValue;
                 }
-
-                // Collecting new search criteria
                 bool? pool = PromptYesNo("Do you require a Pool? (yes/no or leave blank for any): ");
                 bool? eveningEntertainment = PromptYesNo("Do you require Evening Entertainment? (yes/no or leave blank for any): ");
                 bool? kidsClub = PromptYesNo("Do you require a Kids Club? (yes/no or leave blank for any): ");
                 bool? restaurant = PromptYesNo("Do you require a Restaurant? (yes/no or leave blank for any): ");
 
-                // Call the method from AccommodationManager with new parameters
                 await _accommodationManager.SearchAvailableAccommodationsAsync(
                     startDate,
                     endDate,
@@ -692,11 +683,7 @@ namespace alcocodebnb
                 Console.ReadKey();
             }
         }
-
-        /// <summary>
-        /// Helper method to prompt the user for a yes/no question.
-        /// Returns true for "yes", false for "no", and null if left blank.
-        /// </summary>
+        
         private bool? PromptYesNo(string message)
         {
             _console.WriteInfo(message);
@@ -707,7 +694,7 @@ namespace alcocodebnb
             else if (input == "no" || input == "n")
                 return false;
             else
-                return null; // Any for no preference
+                return null;
         }
 
         #endregion
@@ -738,7 +725,6 @@ namespace alcocodebnb
                         await RunAsynchronousOperationAsync();
                         break;
                     case "3":
-                        // Implement Calc test functionality when ready
                         _console.WriteColoredLine("Calc Test functionality coming soon...", ConsoleColor.Cyan);
                         _console.WriteInfo("Press any key to continue...");
                         Console.ReadKey();
@@ -763,7 +749,7 @@ namespace alcocodebnb
                 for (int i = 0; i < 10; i++)
                 {
                     _console.WriteInfo($"Main thread working... {i + 1}");
-                    await Task.Delay(1000); // Simulate work asynchronously
+                    await Task.Delay(1000);
                 }
 
                 _console.WriteSuccess("Finished synchronous operation.");
@@ -787,12 +773,11 @@ namespace alcocodebnb
                 Task longRunningTask = LongRunningOperationAsync();
 
                 _console.WriteInfo("Doing other work while waiting...");
-
-                // Simulate other asynchronous work
+                
                 for (int i = 0; i < 10; i++)
                 {
                     _console.WriteInfo($"Main thread working... {i + 1}");
-                    await Task.Delay(1000); // Simulate work asynchronously
+                    await Task.Delay(1000);
                 }
 
                 await longRunningTask;
@@ -815,13 +800,13 @@ namespace alcocodebnb
 
         private void LongRunningOperation()
         {
-            Thread.Sleep(5000); // Simulates a long operation
+            Thread.Sleep(5000);
             _console.WriteColoredLine("Long-running operation completed.", ConsoleColor.Green);
         }
 
         private async Task LongRunningOperationAsync()
         {
-            await Task.Delay(5000); // Simulates a long operation asynchronously
+            await Task.Delay(5000);
             _console.WriteColoredLine("Long-running operation completed.", ConsoleColor.Green);
         }
 

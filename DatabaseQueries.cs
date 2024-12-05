@@ -42,7 +42,7 @@ namespace alcocodebnb
                 string email = reader.GetString(3);
                 string phonenumber = reader.GetString(4);
                 
-                Console.WriteLine($"- ID: {id} - {firstName,10} {lastName}'s Email: {email,30} | Phone: {phonenumber,15}");
+                Console.WriteLine($"- ID: {id} - {firstName,10} {lastName,14}'s Email: {email,30} | Phone: {phonenumber,15}");
             }
         }
     }
