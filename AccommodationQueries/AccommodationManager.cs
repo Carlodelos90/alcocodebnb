@@ -27,7 +27,6 @@ namespace alcocodebnb.AccommodationQueries
             bool? restaurant = null
         )
         {
-            // Validate dates
             if (endDate <= startDate)
             {
                 Console.WriteLine("End date must be after start date.");
@@ -93,7 +92,7 @@ namespace alcocodebnb.AccommodationQueries
                     Console.WriteLine(
                         $"{id,-5} " +
                         $"{name,-45} " +
-                        $"{baseprice,10:C} " +
+                        $"{baseprice,10} USD " +
                         $"{rating,7:N1} " +
                         $"{(poolValue ? "Yes" : "No"),-5} " +
                         $"{(eveningEntertainmentValue ? "Yes" : "No"),-15} " +
