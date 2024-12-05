@@ -46,6 +46,6 @@ Change color (DONE)
 
 # To fix 5th Dec
 
-## Research on filter implementaion (Done)
-## Extra addons 
-## Why we used "static" methods
+## Research on filter implementaion (DONE)
+## Extra addons (Will do later)
+## Why we used "static" methods (DONE)
