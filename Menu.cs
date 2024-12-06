@@ -104,6 +104,7 @@ namespace alcocodebnb
                     "Add Guests to the Booking",
                     "Sort by distance to beach",
                     "Sort by distance to center",
+                    "Add extra service",
                     "Back to Main Menu"
                 };
 
@@ -138,8 +139,12 @@ namespace alcocodebnb
                         await NewBooking.SortByDistanceToCenterAsync();
                         Console.ReadLine();
                         break;
-
                     case "9":
+                        await AskAddonsAsync();
+                        Console.ReadLine();
+                        break;
+
+                    case "10":
                         return;
                     default:
                         _console.WriteError("Invalid option. Press any key to try again.");
@@ -214,6 +219,54 @@ namespace alcocodebnb
                 Console.ReadKey();
             }
         }
+        
+        #region Manage Addons
+        private async Task AskAddonsAsync()
+        {
+            try
+            {
+                Console.Clear();
+                _console.WriteMenuTitle("------- Add addons --------");
+
+                _console.WriteInfo("Enter Booking ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int bookingid))
+                {
+                    _console.WriteError("Invalid Booking ID.");
+                    return;
+                }
+
+                _console.WriteInfo("ID: 1 - for Extra Bed\nID: 2 - for Half Board\nID: 3 - forFull Board\nID: 4 - for 2 extra Bed\n");
+                _console.WriteInfo("Enter extra service ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int extraserviceid))
+                {
+                    _console.WriteError("Invalid extra service ID.");
+                    return;
+                }
+
+                _console.WriteInfo("Enter quantity: ");
+                if (!int.TryParse(Console.ReadLine(), out int quantity))
+                {
+                    _console.WriteError("Invalid quantity");
+                    return;
+                }
+                
+                await NewBooking.AddExtraService(bookingid, extraserviceid, quantity);
+            }
+            catch (Exception ex)
+            {
+                _console.WriteError($"Error creating booking: {ex.Message}");
+            }
+            finally
+            {
+                _console.WriteSuccess("Addons added successfully!");
+                _console.WriteInfo("Press any key to return...");
+                Console.ReadKey();
+            }
+        }
+        
+        
+        
+        #endregion
 
         private async Task CancelBookingAsync()
         {
@@ -656,6 +709,30 @@ namespace alcocodebnb
                 {
                     maxPrice = maxPriceValue;
                 }
+                
+                _console.WriteInfo("Enter Maximum Distance to Beach (or leave blank): ");
+                string? maxDistanceToBeachInput = Console.ReadLine();
+                decimal? maxDistanceToBeach = null;
+                if (!string.IsNullOrWhiteSpace(maxDistanceToBeachInput) && 
+                    decimal.TryParse(maxDistanceToBeachInput.Replace(',', '.'), System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out decimal maxDistanceToBeachValue))
+                {
+                    maxDistanceToBeach = maxDistanceToBeachValue;
+                }
+                
+                _console.WriteInfo("Enter Maximum Distance to Center (or leave blank): ");
+                string? maxDistanceToCenterInput = Console.ReadLine();
+                decimal? maxDistanceToCenter = null;
+                if (!string.IsNullOrWhiteSpace(maxDistanceToCenterInput) && 
+                    decimal.TryParse(maxDistanceToCenterInput.Replace(',', '.'), 
+                        System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, 
+                        out decimal maxDistanceToCenterValue))
+                {
+                    maxDistanceToCenter = maxDistanceToCenterValue;
+                }
+                
                 bool? pool = PromptYesNo("Do you require a Pool? (yes/no or leave blank for any): ");
                 bool? eveningEntertainment = PromptYesNo("Do you require Evening Entertainment? (yes/no or leave blank for any): ");
                 bool? kidsClub = PromptYesNo("Do you require a Kids Club? (yes/no or leave blank for any): ");
@@ -667,6 +744,8 @@ namespace alcocodebnb
                     locationId,
                     minPrice,
                     maxPrice,
+                    maxDistanceToBeach,
+                    maxDistanceToCenter,
                     pool,
                     eveningEntertainment,
                     kidsClub,

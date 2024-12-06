@@ -397,6 +397,37 @@ public class NewBooking
         }
     }
     
+    #region Add Extra services
+    public static async Task AddExtraService(int bookingid, int extraserviceid, int quantity)
+    {
+        if (_database == null)
+        {
+            throw new InvalidOperationException("Database connection is not initialized.");
+        }
+
+        try
+        {
+            string query = @"
+                INSERT INTO bookingextraservice (bookingid, extraserviceid, quantity) VALUES (@bookingid, @extraserviceid, @quantity);
+            ";
+
+            await using var cmd = _database.CreateCommand(query);
+            cmd.Parameters.AddWithValue("bookingid", bookingid);
+            cmd.Parameters.AddWithValue("extraserviceid", extraserviceid);
+            cmd.Parameters.AddWithValue("quantity", quantity);
+
+            object? result = await cmd.ExecuteScalarAsync();
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error creating booking: {ex.Message}");
+        }
+    }
+    #endregion
+    
+    
+    
     #region SortByDistanceToCenter
 
     public static async Task SortByDistanceToCenterAsync()
