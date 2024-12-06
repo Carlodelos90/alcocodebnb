@@ -656,6 +656,30 @@ namespace alcocodebnb
                 {
                     maxPrice = maxPriceValue;
                 }
+                
+                _console.WriteInfo("Enter Maximum Distance to Beach (or leave blank): ");
+                string? maxDistanceToBeachInput = Console.ReadLine();
+                decimal? maxDistanceToBeach = null;
+                if (!string.IsNullOrWhiteSpace(maxDistanceToBeachInput) && 
+                    decimal.TryParse(maxDistanceToBeachInput.Replace(',', '.'), System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out decimal maxDistanceToBeachValue))
+                {
+                    maxDistanceToBeach = maxDistanceToBeachValue;
+                }
+                
+                _console.WriteInfo("Enter Maximum Distance to Center (or leave blank): ");
+                string? maxDistanceToCenterInput = Console.ReadLine();
+                decimal? maxDistanceToCenter = null;
+                if (!string.IsNullOrWhiteSpace(maxDistanceToCenterInput) && 
+                    decimal.TryParse(maxDistanceToCenterInput.Replace(',', '.'), 
+                        System.Globalization.NumberStyles.Any, 
+                        System.Globalization.CultureInfo.InvariantCulture, 
+                        out decimal maxDistanceToCenterValue))
+                {
+                    maxDistanceToCenter = maxDistanceToCenterValue;
+                }
+                
                 bool? pool = PromptYesNo("Do you require a Pool? (yes/no or leave blank for any): ");
                 bool? eveningEntertainment = PromptYesNo("Do you require Evening Entertainment? (yes/no or leave blank for any): ");
                 bool? kidsClub = PromptYesNo("Do you require a Kids Club? (yes/no or leave blank for any): ");
@@ -667,11 +691,15 @@ namespace alcocodebnb
                     locationId,
                     minPrice,
                     maxPrice,
+                    maxDistanceToBeach,
+                    maxDistanceToCenter,
                     pool,
                     eveningEntertainment,
                     kidsClub,
                     restaurant
                 );
+                Console.WriteLine($"Debug - MaxDistanceToBeach: {maxDistanceToBeach}, MaxDistanceToCenter: {maxDistanceToCenter}");
+                Console.WriteLine($"Debug - MaxDistanceToBeach: {maxPrice}, MaxDistanceToCenter: {minPrice}");
             }
             catch (Exception ex)
             {
