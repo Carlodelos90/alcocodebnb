@@ -23,17 +23,12 @@ namespace alcocodebnb.BookingQueries
             }
         }
     
-        public static async void DeleteBooking(int id)
+        public async Task DeleteBookingAsync(int id)
         {
             await using var cmd = _database?.CreateCommand("DELETE FROM booking WHERE id = $1");
             cmd?.Parameters.AddWithValue(id);
             int result = await cmd?.ExecuteNonQueryAsync()!;
             Console.WriteLine(result);
-        }
-
-        public static void DeleteBooking()
-        {
-            throw new NotImplementedException();
         }
     }
 }

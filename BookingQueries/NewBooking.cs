@@ -112,7 +112,7 @@ public class NewBooking
     #endregion
 
 
-    public static async Task AllLocationsAsync()
+    public async Task AllLocationsAsync()
     {
         if (_database == null)
         {
@@ -150,7 +150,7 @@ public class NewBooking
         }
     }
 
-    public static async Task ShowAccommodationsAsync(int chosenId)
+    public async Task ShowAccommodationsAsync(int chosenId)
     {
         if (_database == null)
         {

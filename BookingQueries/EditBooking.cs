@@ -53,7 +53,7 @@ public class EditBooking
 
     
     
-    public static async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
+    public async Task ChangeBookingDateAsync(int id, DateTime startdate, DateTime enddate)
     {
         try
         {
