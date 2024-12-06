@@ -114,7 +114,7 @@ namespace alcocodebnb.AccommodationQueries
                     Console.WriteLine(
                         $"{id,-10}" +
                         $"{name,-45}" +
-                        $"{baseprice,-15:C}" +
+                        $"{($"{baseprice:N2} USD"),-15}" +
                         $"{distancetobeach,-20:N1}" +
                         $"{distancetocenter,-20:N1}" +
                         $"{rating,-10:N1}" +
@@ -124,12 +124,6 @@ namespace alcocodebnb.AccommodationQueries
                         $"{(restaurantValue ? "Yes" : "No"),-15}"
                     );
                 }
-                
-                if (!anyAvailable)
-                {
-                    Console.WriteLine("Inga boende tillgänglig.");
-                }
-
                 if (!anyAvailable)
                 {
                     Console.WriteLine("No available accommodations found for the selected criteria.");

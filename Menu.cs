@@ -698,8 +698,6 @@ namespace alcocodebnb
                     kidsClub,
                     restaurant
                 );
-                Console.WriteLine($"Debug - MaxDistanceToBeach: {maxDistanceToBeach}, MaxDistanceToCenter: {maxDistanceToCenter}");
-                Console.WriteLine($"Debug - MaxDistanceToBeach: {maxPrice}, MaxDistanceToCenter: {minPrice}");
             }
             catch (Exception ex)
             {
