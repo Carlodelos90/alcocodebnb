@@ -23,16 +23,20 @@ public class EditBooking
                 WHERE bookingid = @BookingId;
             ";
 
-            await using var cmd = _database.CreateCommand(query);
-            cmd.Parameters.AddWithValue("@BookingId", bookingId);
-            cmd.Parameters.AddWithValue("@ExtraServiceId", extraServiceId);
-            cmd.Parameters.AddWithValue("@Quantity", quantity);
-
-            int rowsAffected = await cmd.ExecuteNonQueryAsync();
-
-            if (rowsAffected == 0)
+            if (_database != null)
             {
-                throw new InvalidOperationException("No rows were updated. Check if the booking exists or the inputs are valid.");
+                await using var cmd = _database.CreateCommand(query);
+                cmd.Parameters.AddWithValue("@BookingId", bookingId);
+                cmd.Parameters.AddWithValue("@ExtraServiceId", extraServiceId);
+                cmd.Parameters.AddWithValue("@Quantity", quantity);
+
+                int rowsAffected = await cmd.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
+                {
+                    throw new InvalidOperationException(
+                        "No rows were updated. Check if the booking exists or the inputs are valid.");
+                }
             }
 
             Console.WriteLine("Booking options updated successfully.");
@@ -63,15 +67,19 @@ public class EditBooking
                 "    AND (startdate <= $2 AND enddate >= $1)" +
                 ");");
 
-            cmdInsert.Parameters.AddWithValue(startdate);
-            cmdInsert.Parameters.AddWithValue(enddate);
-            cmdInsert.Parameters.AddWithValue(id);
-
-            var rowsAffected = await cmdInsert.ExecuteNonQueryAsync();
-
-            if (rowsAffected == 0)
+            if (cmdInsert != null)
             {
-                throw new InvalidOperationException("The new booking dates overlap with an existing booking for the same accommodation or the booking does not exist.");
+                cmdInsert.Parameters.AddWithValue(startdate);
+                cmdInsert.Parameters.AddWithValue(enddate);
+                cmdInsert.Parameters.AddWithValue(id);
+
+                var rowsAffected = await cmdInsert.ExecuteNonQueryAsync();
+
+                if (rowsAffected == 0)
+                {
+                    throw new InvalidOperationException(
+                        "The new booking dates overlap with an existing booking for the same accommodation or the booking does not exist.");
+                }
             }
         }
         catch (Exception ex)

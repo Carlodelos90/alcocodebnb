@@ -416,7 +416,7 @@ public class NewBooking
             cmd.Parameters.AddWithValue("extraserviceid", extraserviceid);
             cmd.Parameters.AddWithValue("quantity", quantity);
 
-            object? result = await cmd.ExecuteScalarAsync();
+            await cmd.ExecuteScalarAsync();
             
         }
         catch (Exception ex)

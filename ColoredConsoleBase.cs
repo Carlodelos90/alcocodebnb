@@ -1,6 +1,4 @@
-using System;
-
-namespace alcocodebnb.ConsoleUtilities
+namespace alcocodebnb
 {
     public abstract class ColoredConsoleBase
     {

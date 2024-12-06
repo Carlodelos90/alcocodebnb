@@ -1,9 +1,6 @@
 using alcocodebnb.BookingQueries;
 using alcocodebnb.CustomerQueries;
 using alcocodebnb.AccommodationQueries;
-using alcocodebnb.ConsoleUtilities;
-using System;
-using System.Threading.Tasks;
 
 namespace alcocodebnb
 {
@@ -14,7 +11,6 @@ namespace alcocodebnb
         AccommodationManager _accommodationManager = new(Db.Connection());
         private readonly DatabaseQueries _queries;
         private readonly ApplicationConsole _console = new ApplicationConsole();
-        static DatabaseConnection db = new();
 
         public Menu()
         {
