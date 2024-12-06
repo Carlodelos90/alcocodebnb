@@ -39,7 +39,6 @@ namespace alcocodebnb.AccommodationQueries
                 SELECT a.id, a.name, a.distancetobeach, a.distancetocenter, a.baseprice, a.rating, a.pool, a.eveningentertainment, a.kidsclub, a.restaurant
                 FROM accommodation a
                 WHERE
-                    -- sökkriterier för filtret i postgres
                     (@LocationId IS NULL OR a.location = @LocationId) AND
                     (@MinPrice IS NULL OR a.baseprice >= @MinPrice) AND
                     (@MaxPrice IS NULL OR a.baseprice <= @MaxPrice) AND
@@ -81,14 +80,13 @@ namespace alcocodebnb.AccommodationQueries
 
                 Console.WriteLine("\nAvailable Accommodations:");
                 Console.WriteLine(new string('-', 150)); 
-
-// vänsterjustering för att det är lättare att förhålla sig till
+                
                 Console.WriteLine(
                     $"{"ID",-10}" +
-                    $"{"Name",-60}" +
+                    $"{"Name",-45}" +
                     $"{"Price",-15}" +
-                    $"{"Beach Dist",-20}" +
-                    $"{"Center Dist",-20}" +
+                    $"{"Beach Dist in KM",-20}" +
+                    $"{"Center Dist in KM",-20}" +
                     $"{"Rating",-10}" +
                     $"{"Pool",-10}" +
                     $"{"Evening Ent.",-20}" +
@@ -115,10 +113,10 @@ namespace alcocodebnb.AccommodationQueries
 
                     Console.WriteLine(
                         $"{id,-10}" +
-                        $"{name,-60}" +
+                        $"{name,-45}" +
                         $"{baseprice,-15:C}" +
-                        $"{distancetobeach,-20:N1} km" +
-                        $"{distancetocenter,-20:N1} km" +
+                        $"{distancetobeach,-20:N1}" +
+                        $"{distancetocenter,-20:N1}" +
                         $"{rating,-10:N1}" +
                         $"{(poolValue ? "Yes" : "No"),-10}" +
                         $"{(eveningEntertainmentValue ? "Yes" : "No"),-20}" +
@@ -126,8 +124,7 @@ namespace alcocodebnb.AccommodationQueries
                         $"{(restaurantValue ? "Yes" : "No"),-15}"
                     );
                 }
-
-// Hantera fall där ingen boende är tillgänglig
+                
                 if (!anyAvailable)
                 {
                     Console.WriteLine("Inga boende tillgänglig.");
