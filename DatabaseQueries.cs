@@ -2,14 +2,9 @@ using Npgsql;
 
 namespace alcocodebnb
 {
-    public class DatabaseQueries
+    public class DatabaseQueries(NpgsqlDataSource database)
     {
-        private NpgsqlDataSource? _database;
-
-        public DatabaseQueries(NpgsqlDataSource database)
-        {
-            _database = database;
-        }
+        private readonly NpgsqlDataSource? _database = database;
 
         public async Task GetAllCustomers()
         {

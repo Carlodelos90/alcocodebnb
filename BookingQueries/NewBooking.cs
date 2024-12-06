@@ -13,7 +13,7 @@ public class NewBooking
     }
 
     #region Add New Booking
-    public static async Task AddNewBookingAsync(int customerId, int accommodationId, DateTime startDateTime,
+    public  async Task AddNewBookingAsync(int customerId, int accommodationId, DateTime startDateTime,
         DateTime endDateTime, int numberOfGuests)
     {
         if (_database == null)
@@ -68,7 +68,7 @@ public class NewBooking
     #endregion
 
     #region Helper Methods
-    private static async Task<decimal> GetBasePriceAsync(int accommodationId)
+    private async Task<decimal> GetBasePriceAsync(int accommodationId)
     {
         if (_database == null)
         {
@@ -100,7 +100,7 @@ public class NewBooking
         }
     }
 
-    private static int CalculateNumberOfDays(DateTime startDate, DateTime endDate)
+    private int CalculateNumberOfDays(DateTime startDate, DateTime endDate)
     {
         if (endDate <= startDate)
         {
@@ -205,7 +205,7 @@ public class NewBooking
         }
     }
 
-    public static async Task ShowBookingSummaryAsync(int bookingId)
+    public async Task ShowBookingSummaryAsync(int bookingId)
     {
         if (_database == null)
         {
@@ -269,7 +269,7 @@ public class NewBooking
         }
     }
 
-    public static async Task FilterPriceAscAsync()
+    public async Task FilterPriceAscAsync()
     {
         if (_database == null)
         {
@@ -313,7 +313,7 @@ public class NewBooking
         }
     }
 
-    public static async Task FilterPriceDescAsync()
+    public async Task FilterPriceDescAsync()
     {
         if (_database == null)
         {
@@ -357,7 +357,7 @@ public class NewBooking
         }
     }
 
-    public static async Task FilterReviewAsync()
+    public async Task FilterReviewAsync()
     {
         if (_database == null)
         {
@@ -398,7 +398,7 @@ public class NewBooking
     }
     
     #region Add Extra services
-    public static async Task AddExtraService(int bookingid, int extraserviceid, int quantity)
+    public async Task AddExtraService(int bookingid, int extraserviceid, int quantity)
     {
         if (_database == null)
         {
@@ -430,7 +430,7 @@ public class NewBooking
     
     #region SortByDistanceToCenter
 
-    public static async Task SortByDistanceToCenterAsync()
+    public async Task SortByDistanceToCenterAsync()
     {
         if (_database == null)
         {
@@ -479,7 +479,7 @@ public class NewBooking
     
     #region SortByDistanceToBeach
     
-    public static async Task SortByDistanceToBeach()
+    public async Task SortByDistanceToBeach()
     {
         if (_database == null)
         {

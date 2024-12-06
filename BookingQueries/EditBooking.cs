@@ -1,19 +1,14 @@
 namespace alcocodebnb.BookingQueries;
 using Npgsql;
 
-public class EditBooking
+public class EditBooking(NpgsqlDataSource database)
 {
-    private static NpgsqlDataSource? _database;
-
-    public EditBooking(NpgsqlDataSource database)
-    {
-        _database = database ?? throw new ArgumentNullException(nameof(database));
-    }
+    private readonly NpgsqlDataSource? _database = database ?? throw new ArgumentNullException(nameof(database));
 
 
     #region Change Booking Options
 
-    public static async Task ChangeBookingOptionsAsync(int bookingId, int extraServiceId, int quantity)
+    public async Task ChangeBookingOptionsAsync(int bookingId, int extraServiceId, int quantity)
     {
         try
         {
@@ -90,7 +85,7 @@ public class EditBooking
     }
 
     
-    public static async void GetAllBookingsAsync()
+    public async void GetAllBookingsAsync()
     {
         await using var cmd = _database?.CreateCommand("SELECT id, customerid, accommodationid, startdate, enddate, totalprice, numberofguests  FROM booking;");
         await using var reader = await cmd?.ExecuteReaderAsync()!;
@@ -115,7 +110,7 @@ public class EditBooking
         }
     }
     
-    public static async Task GetAllAddonsAsync()
+    public async Task GetAllAddonsAsync()
     {
         await using var cmd = _database?.CreateCommand("SELECT bookingid, extraserviceid, quantity  FROM bookingextraservice;");
         await using var reader = await cmd?.ExecuteReaderAsync()!;
@@ -137,12 +132,12 @@ public class EditBooking
         throw new NotImplementedException("ChangeBooking method is not implemented yet.");
     }
     
-    public static void ChangeBoardOptionPlaceholder(int bookingId, int extraServiceId, int quantity)
+    public void ChangeBoardOptionPlaceholder(int bookingId, int extraServiceId, int quantity)
     {
         throw new NotImplementedException("ChangeBoardOptionPlaceholder method is not implemented yet.");
     }
     
-    public static void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
+    public void ChangeBoardOption(int bookingId, int extraServiceId, int quantity)
     {
         throw new NotImplementedException();
     }

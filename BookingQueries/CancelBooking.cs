@@ -2,17 +2,12 @@ using Npgsql;
 
 namespace alcocodebnb.BookingQueries
 {
-    public class CancelBooking
+    public class CancelBooking(NpgsqlDataSource database)
     {
     
-        private static NpgsqlDataSource? _database;
+        private readonly NpgsqlDataSource? _database = database;
 
-        public CancelBooking(NpgsqlDataSource database)
-        {
-            _database = database;
-        }
-    
-        public static async void AllBookings()
+        public async void AllBookings()
         {
             await using var cmd = _database?.CreateCommand("SELECT id FROM booking");
             await using var reader = await cmd?.ExecuteReaderAsync()!;

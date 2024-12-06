@@ -9,20 +9,11 @@ namespace alcocodebnb
         static readonly DatabaseConnection Db = new();
         private readonly CustomerManager _customerManager = new CustomerManager(Db.Connection());
         private readonly ApplicationConsole _console = new ApplicationConsole();
-        private readonly AccommodationManager _accommodationManager;
-        private readonly CancelBooking _cancelBooking;
-        private readonly EditBooking _editBooking;
-        private readonly DatabaseQueries _queries;
-        private readonly NewBooking _newBooking;
-        
-        public Menu()
-        {
-            _accommodationManager = new(Db.Connection());
-            _newBooking = new NewBooking(Db.Connection());
-            _cancelBooking = new CancelBooking(Db.Connection());
-            _queries = new DatabaseQueries(Db.Connection());
-            _editBooking = new EditBooking(Db.Connection());
-        }
+        private readonly AccommodationManager _accommodationManager = new(Db.Connection());
+        private readonly CancelBooking _cancelBooking = new(Db.Connection());
+        private readonly EditBooking _editBooking = new(Db.Connection());
+        private readonly DatabaseQueries _queries = new(Db.Connection());
+        private readonly NewBooking _newBooking = new(Db.Connection());
 
         #region Start method of the menu
         public async Task Start()
@@ -133,7 +124,7 @@ namespace alcocodebnb
                         Console.ReadLine();
                         break;
                     case "8":
-                        await NewBooking.SortByDistanceToCenterAsync();
+                        await _newBooking.SortByDistanceToCenterAsync();
                         Console.ReadLine();
                         break;
                     case "9":
@@ -204,7 +195,7 @@ namespace alcocodebnb
                     return;
                 }
                 
-                await NewBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
+                await _newBooking.AddNewBookingAsync(customerId, accommodationId, startDate, endDate, numberOfGuests);
             }
             catch (Exception ex)
             {
@@ -247,7 +238,7 @@ namespace alcocodebnb
                     return;
                 }
                 
-                await NewBooking.AddExtraService(bookingid, extraserviceid, quantity);
+                await _newBooking.AddExtraService(bookingid, extraserviceid, quantity);
             }
             catch (Exception ex)
             {
@@ -271,7 +262,7 @@ namespace alcocodebnb
             {
                 Console.Clear();
                 _console.WriteMenuTitle("------- Cancel Booking --------");
-                EditBooking.GetAllBookingsAsync();
+                _editBooking.GetAllBookingsAsync();
 
                 _console.WriteInfo("Enter the ID of the booking you want to cancel: ");
                 if (int.TryParse(Console.ReadLine(), out int cancelId))
@@ -338,7 +329,7 @@ namespace alcocodebnb
             try
             {
                 Console.Clear();
-                EditBooking.GetAllBookingsAsync();
+                _editBooking.GetAllBookingsAsync();
 
                 _console.WriteInfo("Enter the Booking ID: ");
                 if (!int.TryParse(Console.ReadLine(), out int bookingId))
@@ -402,7 +393,7 @@ namespace alcocodebnb
             }
         }
         
-        public async Task UpdateBookingExtrasAsync()
+        private async Task UpdateBookingExtrasAsync()
         {
             try
             {
@@ -426,7 +417,7 @@ namespace alcocodebnb
                     _console.WriteError("Invalid Quantity.");
                     return;
                 }
-                await EditBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
+                await _editBooking.ChangeBookingOptionsAsync(bookingId, extraServiceId, quantity);
             }
             catch (Exception ex)
             {
@@ -456,12 +447,12 @@ namespace alcocodebnb
                 switch (input)
                 {
                     case "1":
-                        await NewBooking.FilterPriceAscAsync();
+                        await _newBooking.FilterPriceAscAsync();
                         _console.WriteInfo("Press any key to go back to 'Manage Bookings'");
                         Console.ReadKey();
                         break;
                     case "2":
-                        await NewBooking.FilterPriceDescAsync();
+                        await _newBooking.FilterPriceDescAsync();
                         _console.WriteInfo("Press any key to go back to 'Manage Bookings'");
                         Console.ReadKey();
                         break;
@@ -480,7 +471,7 @@ namespace alcocodebnb
             try
             {
                 Console.Clear();
-                await NewBooking.FilterReviewAsync();
+                await _newBooking.FilterReviewAsync();
             }
             catch (Exception ex)
             {
@@ -498,7 +489,7 @@ namespace alcocodebnb
             try
             {
                 Console.Clear();
-                await NewBooking.SortByDistanceToBeach();
+                await _newBooking.SortByDistanceToBeach();
                 _console.WriteInfo("Sort by beach completed.");
             }
             catch (Exception ex)
