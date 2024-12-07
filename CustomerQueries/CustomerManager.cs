@@ -10,25 +10,13 @@ public class CustomerManager(NpgsqlDataSource database)
     {
         while (true)
         {
-            Console.Write("Enter First Name: ");
-            string? firstName = Console.ReadLine();
-
-            Console.Write("Enter Last Name: ");
-            string? lastName = Console.ReadLine();
-
-            Console.Write("Enter Email: ");
-            string? email = Console.ReadLine();
-
-            Console.Write("Enter Phone Number: ");
-            string? phoneNumber = Console.ReadLine();
-
-            Console.Write("Enter Date of Birth (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
-            {
-                Console.WriteLine("Invalid Date of Birth.");
-                continue;
-            }
+            string firstName = PromptForNonEmptyString("Enter First Name: ");
+            string lastName = PromptForNonEmptyString("Enter Last Name: ");
+            string email = PromptForNonEmptyString("Enter Email: ");
+            string phoneNumber = PromptForNonEmptyString("Enter Phone Number: ");
             
+            DateTime dateOfBirth = PromptForValidDate("Enter Date of Birth (yyyy-mm-dd): ");
+
             await AddCustomerToDatabaseAsync(firstName, lastName, email, phoneNumber, dateOfBirth);
 
             Console.WriteLine("\nCustomer added successfully.");
@@ -57,10 +45,8 @@ public class CustomerManager(NpgsqlDataSource database)
             cmd.Parameters.AddWithValue(email);
             cmd.Parameters.AddWithValue(phoneNumber);
             cmd.Parameters.AddWithValue(dateOfBirth);
-            
-            //Gets the new ID
-            int newCustomerId = (int)(await cmd.ExecuteScalarAsync())!;
 
+            int newCustomerId = (int)(await cmd.ExecuteScalarAsync())!;
             Console.WriteLine("\nCustomer ID: " + newCustomerId);
         }
         catch (Exception ex)
@@ -77,32 +63,14 @@ public class CustomerManager(NpgsqlDataSource database)
     {
         while (true)
         {
-            Console.Write("Enter guest's First Name: ");
-            string? firstName = Console.ReadLine();
+            string firstName = PromptForNonEmptyString("Enter guest's First Name: ");
+            string lastName = PromptForNonEmptyString("Enter guest's Last Name: ");
+            string email = PromptForNonEmptyString("Enter guest's Email: ");
+            string phoneNumber = PromptForNonEmptyString("Enter guest's Phone Number: ");
+            DateTime dateOfBirth = PromptForValidDate("Enter guest's Date of Birth (yyyy-mm-dd): ");
 
-            Console.Write("Enter guest's Last Name: ");
-            string? lastName = Console.ReadLine();
+            int bookingId = PromptForValidInt("Enter guest's booking's ID: ");
 
-            Console.Write("Enter guest's Email: ");
-            string? email = Console.ReadLine();
-
-            Console.Write("Enter guest's Phone Number: ");
-            string? phoneNumber = Console.ReadLine();
-
-            Console.Write("Enter guest's Date of Birth (yyyy-mm-dd): ");
-            if (!DateTime.TryParse(Console.ReadLine(), out DateTime dateOfBirth))
-            {
-                Console.WriteLine("Invalid Date of Birth.");
-                continue;
-            }
-            
-            Console.Write("Enter guest's booking's ID: ");
-            if (!int.TryParse(Console.ReadLine(), out int bookingId))
-            {
-                Console.WriteLine("Invalid Booking ID.");
-                continue;
-            }
-            
             bool isSuccess = await AddGuestToDatabaseAsync(firstName, lastName, email, phoneNumber, dateOfBirth, bookingId);
 
             if (isSuccess)
@@ -144,9 +112,8 @@ public class CustomerManager(NpgsqlDataSource database)
             cmd.Parameters.AddWithValue(phoneNumber);
             cmd.Parameters.AddWithValue(dateOfBirth);
             cmd.Parameters.AddWithValue(bookingId);
-            
-            int newGuestId = (int)(await cmd.ExecuteScalarAsync())!;
 
+            int newGuestId = (int)(await cmd.ExecuteScalarAsync())!;
             Console.WriteLine("\nGuest ID: " + newGuestId);
             return true;
         }
@@ -177,6 +144,57 @@ public class CustomerManager(NpgsqlDataSource database)
         {
             Console.WriteLine($"Error updating number of guests: {ex.Message}");
             return false;
+        }
+    }
+
+    #endregion
+
+    #region Helper Methods
+    
+    private string PromptForNonEmptyString(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string? input = Console.ReadLine();
+
+            if (!string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            Console.WriteLine("Input cannot be empty. Please try again.\n");
+        }
+    }
+    
+    private DateTime PromptForValidDate(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string? input = Console.ReadLine();
+
+            if (DateTime.TryParse(input, out DateTime date))
+            {
+                return date;
+            }
+
+            Console.WriteLine("Invalid date format. Please try again.\n");
+        }
+    }
+    private int PromptForValidInt(string prompt)
+    {
+        while (true)
+        {
+            Console.Write(prompt);
+            string? input = Console.ReadLine();
+
+            if (int.TryParse(input, out int value))
+            {
+                return value;
+            }
+
+            Console.WriteLine("Invalid number. Please try again.\n");
         }
     }
 
