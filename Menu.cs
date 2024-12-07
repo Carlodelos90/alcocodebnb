@@ -8,12 +8,12 @@ namespace alcocodebnb
     {
         static readonly DatabaseConnection Db = new();
         private readonly CustomerManager _customerManager = new CustomerManager(Db.Connection());
-        private readonly ApplicationConsole _console = new ApplicationConsole();
         private readonly AccommodationManager _accommodationManager = new(Db.Connection());
         private readonly CancelBooking _cancelBooking = new(Db.Connection());
         private readonly EditBooking _editBooking = new(Db.Connection());
-        private readonly DatabaseQueries _queries = new(Db.Connection());
+        private readonly ApplicationConsole _console = new ApplicationConsole();
         private readonly NewBooking _newBooking = new(Db.Connection());
+        private readonly DatabaseQueries _queries = new(Db.Connection());
 
         #region Start method of the menu
         public async Task Start()

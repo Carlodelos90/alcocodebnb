@@ -81,27 +81,17 @@ namespace alcocodebnb.AccommodationQueries
                     await using var reader = await cmd.ExecuteReaderAsync();
 
                     Console.WriteLine("\nAvailable Accommodations:");
-                    Console.WriteLine(new string('-', 150)); 
-                    
+                    Console.WriteLine(new string('-', 140));
                     Console.WriteLine(
-                        $"{"ID",-10}" +
-                        $"{"Name",-45}" +
-                        $"{"Price",-15}" +
-                        $"{"Beach Dist in KM",-20}" +
-                        $"{"Center Dist in KM",-20}" +
-                        $"{"Rating",-10}" +
-                        $"{"Pool",-10}" +
-                        $"{"Evening Ent.",-20}" +
-                        $"{"Kids Club",-15}" +
-                        $"{"Restaurant",-15}"
-                    );
-                    Console.WriteLine(new string('-', 200)); 
+                        $"{"ID",-5}{"Name",-50}{"Price",-15}{"Beach Distance",-20}{"Center Distance",-20}{"Rating",-10}{"Pool",-5}{"Evening Ent.",-15}{"Kids Club",-10}{"Restaurant",-10}");
+                    Console.WriteLine(new string('-', 140));
 
                     bool anyAvailable = false;
-                    while (await reader.ReadAsync()) 
+
+                    while (await reader.ReadAsync())
                     {
                         anyAvailable = true;
-        
+
                         int id = reader.GetInt32(0);
                         string name = reader.GetString(1);
                         decimal distancetobeach = reader.GetDecimal(2);
@@ -114,17 +104,16 @@ namespace alcocodebnb.AccommodationQueries
                         bool restaurantValue = reader.GetBoolean(9);
 
                         Console.WriteLine(
-                            $"{id,-10}" +
-                            $"{name,-45}" +
+                            $"{id,-5}" +
+                            $"{name,-50}" +
                             $"{($"{baseprice:N2} USD"),-15}" +
                             $"{distancetobeach,-20:N1}" +
                             $"{distancetocenter,-20:N1}" +
                             $"{rating,-10:N1}" +
-                            $"{(poolValue ? "Yes" : "No"),-10}" +
-                            $"{(eveningEntertainmentValue ? "Yes" : "No"),-20}" +
-                            $"{(kidsClubValue ? "Yes" : "No"),-15}" +
-                            $"{(restaurantValue ? "Yes" : "No"),-15}"
-                        );
+                            $"{(poolValue ? "Yes" : "No"),-5}" +
+                            $"{(eveningEntertainmentValue ? "Yes" : "No"),-15}" +
+                            $"{(kidsClubValue ? "Yes" : "No"),-10}" +
+                            $"{(restaurantValue ? "Yes" : "No"),-10}");
                     }
                     if (!anyAvailable)
                     {

@@ -2,15 +2,8 @@ using Npgsql;
 
 namespace alcocodebnb.CustomerQueries;
 
-public class CustomerManager
+public class CustomerManager(NpgsqlDataSource database)
 {
-    private readonly NpgsqlDataSource _database;
-
-    public CustomerManager(NpgsqlDataSource database)
-    {
-        _database = database;
-    }
-
     #region Add Customer
 
     public async Task AddCustomerAsync()
@@ -58,7 +51,7 @@ public class CustomerManager
 
         try
         {
-            await using var cmd = _database.CreateCommand(query);
+            await using var cmd = database.CreateCommand(query);
             cmd.Parameters.AddWithValue(firstName);
             cmd.Parameters.AddWithValue(lastName);
             cmd.Parameters.AddWithValue(email);
@@ -144,7 +137,7 @@ public class CustomerManager
 
         try
         {
-            await using var cmd = _database.CreateCommand(query);
+            await using var cmd = database.CreateCommand(query);
             cmd.Parameters.AddWithValue(firstName);
             cmd.Parameters.AddWithValue(lastName);
             cmd.Parameters.AddWithValue(email);
@@ -173,7 +166,7 @@ public class CustomerManager
 
         try
         {
-            await using var cmd = _database.CreateCommand(query);
+            await using var cmd = database.CreateCommand(query);
             cmd.Parameters.AddWithValue(bookingId);
 
             int rowsAffected = await cmd.ExecuteNonQueryAsync();
