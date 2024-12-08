@@ -28,10 +28,10 @@ public class ApplicationConsole : ColoredConsoleBase
         WriteLineWithColor(message, ConsoleColor.Cyan);
     }
 
-    public void WriteNeutralLine(string message)
+    /*public void WriteNeutralLine(string message)
     {
         WriteLine(message);
-    }
+    }*/
 
     public void WriteColoredLine(string message, ConsoleColor color)
     {
