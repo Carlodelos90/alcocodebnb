@@ -57,7 +57,7 @@ namespace alcocodebnb
             _console.WriteMenuTitle("------- Welcome to AlcoCodeBNB --------");
             _console.WriteInfo("\n1. Manage Bookings" +
                               "\n2. Manage Customers" +
-                              "\n3. Manage Accommodations" +
+                              "\n3. ADVANCED Accommodation Search (Find the accommodation here and book in 'Manage Booking' > 'New booking'" +
                               "\n4. Exit" +
                               "\n5. Miscellaneous");
             _console.WriteInfo("Choose an option: ");
