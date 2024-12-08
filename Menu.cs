@@ -673,7 +673,8 @@ namespace alcocodebnb
                     _console.WriteError("End date must be after start date.");
                     return;
                 }
-
+                
+                await _newBooking.AllLocationsAsync();
                 _console.WriteInfo("Enter Location ID (or leave blank): ");
                 string? locationInput = Console.ReadLine();
                 int? locationId = null;
